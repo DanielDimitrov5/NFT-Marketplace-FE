@@ -1,0 +1,11 @@
+@import 'variables.scss';
+@import 'mixins.scss';
+@import 'bootstrap.scss';
+@import 'typography.scss';
+@import 'layout.scss';
+
+.img-profile {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}

@@ -1,0 +1,21 @@
+// Typography Mixins and functions
+@mixin text() {
+  font-family: $font-family-base;
+}
+
+@mixin heading() {
+  font-family: $font-family-headings;
+}
+
+@mixin text-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@function texts-deep-get($map, $keys...) {
+  @each $key in $keys {
+    $map: map-get($map, $key);
+  }
+  @return $map;
+}
