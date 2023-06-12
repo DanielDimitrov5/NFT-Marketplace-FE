@@ -4,15 +4,18 @@ import React, { useState, useEffect, useCallback } from 'react';
 import marketplaceABI from '../abi/NFTMarketplace.json';
 import { ethers } from 'ethers';
 import { erc721ABI } from 'wagmi';
+import axios from 'axios';
+import ItemCards from '../components/ItemCards';
+
 
 
 const marketplaceContract = {
     address: '0xa79Ef7898394B79b809043B9CDE8Dbc1f3550E02',
     abi: marketplaceABI,
 }
-const NETWORK = 'sepolia';
-const API_KEY = '09755767452a49d3a5b3f9b84d9db6c9';
-const IPFS_PROVIDER = 'https://charity-file-storage.infura-ipfs.io/ipfs/';
+const NETWORK = process.env.REACT_APP_NETWORK;
+const API_KEY = process.env.REACT_APP_API_KEY;
+const IPFS_PROVIDER = process.env.REACT_APP_IPFS_PROVIDER;
 
 function Home() {
 
@@ -25,93 +28,64 @@ function Home() {
         setIsLoadingContractData(true);
 
         const provider = new ethers.providers.InfuraProvider(NETWORK, API_KEY);
-        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
-        setContract(contract);
+        const contract = new ethers.Contract(
+            marketplaceContract.address,
+            marketplaceContract.abi,
+            provider,
+        );
 
         const count = await contract.itemCount();
 
         const countArr = Array.from({ length: count.toNumber() }, (_, i) => i + 1);
 
-        const itemsArr = countArr.map((i) => contract.items(i));
+        const itemsPromises = countArr.map((item) => contract.items(item));
 
-        const URIs = [];
+        const items = await Promise.all(itemsPromises);
 
-        const items = await Promise.all(
-            itemsArr.map(async (item) => {
-                const itemData = await item;
-                const nftContract = new ethers.Contract(itemData.nftContract, erc721ABI, provider);
-                const tokenUri = nftContract.tokenURI(itemData.tokenId);
-                URIs.push(tokenUri);
+        const URIPrimises = items.map((item) => {
+            const nftContract = new ethers.Contract(
+                item.nftContract,
+                erc721ABI,
+                provider,
+            );
+            const tokenUri = nftContract.tokenURI(item.tokenId);
+            return tokenUri;
+        });
 
-                return itemData;
-            })
-        );
 
-        const metaData = await Promise.all(
-            URIs.map(async (uri) => {
-                const URI = (await uri).replace('ipfs://', IPFS_PROVIDER);
-                const response = await fetch(URI);
-                const data = await response.json();
-                data.image = data.image.replace('ipfs://', IPFS_PROVIDER);
-                return data;
-            })
-        );
+        const URIs = await Promise.all(URIPrimises);
 
-        setContractData({ ...contractData, items, metaData });
+        const URIsModified = URIs.map((uri) => {
+            return uri.replace('ipfs://', IPFS_PROVIDER);
+        });
+
+        const metadataPromises = URIsModified.map((uri) => {
+            return axios.get(uri);
+        });
+
+        const metadataArr = await Promise.all(metadataPromises);
+
+        const metadataArrModified = metadataArr.map((metadata) => {
+            return {
+                ...metadata,
+                name: metadata.data.name,
+                image: metadata.data.image.replace('ipfs://', IPFS_PROVIDER),
+                description: metadata.data.description,
+            };
+        });
+
+
+        setContractData({ ...contractData, items, metaData: metadataArrModified });
         setIsLoadingContractData(false);
     };
 
+
+
     useEffect(() => {
         getContractData();
-    }, []);
+    }, [contract]);
 
-    return (
-        <div className="container my-5">
-            {isLoadingContractData ? (
-                <div className="text-center">
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                        <div />
-                    </div>
-                </div>
-            ) : (
-                <div className="row">
-                    {contractData.items.map((item, i) => (
-                        <div className="col-md-4" key={i}>
-                            <div className="card mb-4">
-                                <img
-                                    src={contractData.metaData[i].image}
-                                    className="card-img-top"
-                                    alt="..."
-                                />
-                                <div className="card-body">
-                                    <h5 className="card-title">{contractData.metaData[i].name}</h5>
-                                    <p className="card-text">{contractData.metaData[i].description}</p>
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <div className="btn-group">
-                                            <button
-                                                type="button"
-                                                className="btn btn-sm btn-outline-secondary"
-                                            >
-                                                View
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className="btn btn-sm btn-outline-secondary"
-                                            >
-                                                Edit
-                                            </button>
-                                        </div>
-                                        <small className="text-muted">{ethers.utils.formatEther(item.price)} ETH</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
+    return <ItemCards contractData={contractData} isLoadingContractData={isLoadingContractData} />;
 }
 
 export default Home;
