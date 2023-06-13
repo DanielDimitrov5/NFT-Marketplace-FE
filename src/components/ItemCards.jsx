@@ -1,17 +1,14 @@
 import { ethers } from 'ethers';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEthereum } from "@fortawesome/free-brands-svg-icons"
 
 const ItemCards = ({ contractData, isLoadingContractData }) => {
-
-
     return (
         <div className="container my-5">
             {isLoadingContractData ? (
                 <div className="text-center">
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                        <div />
-                    </div>
+                    <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
                 </div>
             ) : (
                 <div className="row">

@@ -1,25 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// import { Link } from 'react-router-dom';
-// import { useContractRead, useContractReads, useContractInfiniteReads, paginatedIndexesConfig } from 'wagmi';
-import marketplaceABI from '../abi/NFTMarketplace.json';
+import marketplaceABI from '../contractData/abi/NFTMarketplace.json';
 import { ethers } from 'ethers';
 import { erc721ABI } from 'wagmi';
 import axios from 'axios';
 import ItemCards from '../components/ItemCards';
 
-
-
 const marketplaceContract = {
     address: '0xa79Ef7898394B79b809043B9CDE8Dbc1f3550E02',
     abi: marketplaceABI,
 }
+
 const NETWORK = process.env.REACT_APP_NETWORK;
 const API_KEY = process.env.REACT_APP_API_KEY;
 const IPFS_PROVIDER = process.env.REACT_APP_IPFS_PROVIDER;
 
 function Home() {
 
-    // Contract states
     const [contract, setContract] = useState();
     const [contractData, setContractData] = useState({});
     const [isLoadingContractData, setIsLoadingContractData] = useState(true);
@@ -78,8 +74,6 @@ function Home() {
         setContractData({ ...contractData, items, metaData: metadataArrModified });
         setIsLoadingContractData(false);
     };
-
-
 
     useEffect(() => {
         getContractData();
