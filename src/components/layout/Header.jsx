@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 const md5 = require('md5');
 
 function Header() {
-    const [currentSelection, setCurrentSelection] = useState('Actions')
+    const [currentSelection, setCurrentSelection] = useState('Home')
 
     const connector = new MetaMaskConnector({
         chains: [sepolia],
@@ -50,6 +50,7 @@ function Header() {
                         <NavDropdown
                             title={currentSelection}
                         >
+                            <NavDropdown.Item as={Link} to={'/'} onClick={handleSelect}>Home</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/create-collection'} onClick={handleSelect}>Create NFT collection</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/collections'} onClick={handleSelect}>View NFT collections</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2" onClick={handleSelect}>
