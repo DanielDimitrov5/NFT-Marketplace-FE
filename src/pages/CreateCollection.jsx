@@ -68,7 +68,7 @@ const CreateCollection = () => {
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="collectionDescription" className="form-label">NFT Collection symbol</label>
-                                    <textarea className="form-control" id="collectionDescription" rows="3" value={collectionSymbol} onChange={handleCollectionSymbolChange}></textarea>
+                                    <input className="form-control" id="collectionDescription" rows="3" value={collectionSymbol} onChange={handleCollectionSymbolChange}></input>
                                 </div>
                                 {isLoading ? (
                                     <button type="submit" className="btn btn-primary" disabled>Create</button>) : (

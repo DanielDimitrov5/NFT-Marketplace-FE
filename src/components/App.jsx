@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { WagmiConfig, configureChains, createClient } from 'wagmi';
@@ -13,11 +13,9 @@ import Styleguide from '../pages/Styleguide';
 
 import Header from './layout/Header';
 import Footer from './layout/Footer';
-
+import AddItem from '../pages/AddItem';
 
 function App() {
-    const [contract, setContract] = useState();
-
     const { provider } = configureChains([sepolia], [publicProvider()]);
 
     const client = createClient({
@@ -36,6 +34,7 @@ function App() {
                             <Route path="/item/:id" element={<Item />} />
                             <Route path="/create-collection" element={<CreateCollection />} />
                             <Route path="/collections" element={<Collections />} />
+                            <Route path="/add-item" element={<AddItem />} />
                             <Route path="styleguide" element={<Styleguide />} />
                         </Routes>
                     </div>
