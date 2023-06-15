@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { loadItems } from "../services/helpers";
 import ItemCards from "../components/ItemCards";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEthereum } from "@fortawesome/free-brands-svg-icons"
 import Link from "antd/es/typography/Link";
 import marketplaceABI from "../contractData/abi/NFTMarketplace.json";
 
@@ -25,12 +27,8 @@ const Collection = () => {
 
         const { items, metadataArrModified } = await loadItems(contract);
 
-        //filter items by collection address and then metadataArrModified on the same index
         const itemsFiltered = items.filter(item => item.nftContract === id);
         const metadataArrModifiedFiltered = metadataArrModified.filter((item, index) => itemsFiltered.includes(items[index]));
-
-        console.log("filter", itemsFiltered);
-        console.log("filter1", metadataArrModifiedFiltered);
 
         setContractData({ ...contractData, items: itemsFiltered, metaData: metadataArrModifiedFiltered });
         setIsLoadingContractData(false);
@@ -40,14 +38,18 @@ const Collection = () => {
         getItems();
     }, []);
 
-    if (!contractData.items) return null;
-
     return (
         <>
             <br />
             <h1>Collection: {id}</h1>
-            {contractData.items.length === 0 && <p>This collection is empty. <Link href="/add-item">Add item</Link> from this collection if you own one.</p>}
-            <ItemCards contractData={contractData} isLoadingContractData={isLoadingContractData} />
+            {isLoadingContractData ? (
+                <div className="text-center">
+                    <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
+                </div>
+            ) : (
+                contractData.items.length === 0 ? <p>This collection is empty. <Link href="/add-item">Add item</Link> from this collection if you own one.</p>
+                    : <ItemCards contractData={contractData} isLoadingContractData={isLoadingContractData} />)
+            }
         </>
     )
 
