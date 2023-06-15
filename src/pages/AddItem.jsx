@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import marketplaceABI from "../contractData/abi/NFTMarketplace.json";
-import loadCollections from "../services/helpers";
+import { loadCollections } from "../services/helpers";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEthereum } from "@fortawesome/free-brands-svg-icons"
 import { Button, Popover, InputNumber, Space, Form } from 'antd';

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import marketplaceABI from '../contractData/abi/NFTMarketplace.json';
 import { ethers } from 'ethers';
-import { erc721ABI } from 'wagmi';
-import loadCollections from '../services/helpers';
+import { loadCollections } from '../services/helpers';
+import { loadItems } from '../services/helpers';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEthereum } from "@fortawesome/free-brands-svg-icons"
 
@@ -53,11 +54,13 @@ const Collections = () => {
                     collections.map((collection, index) => (
                         <div className="col-12 col-md-6 col-lg-4" key={index}>
                             <div className="card">
-                                <div className="card-body">
-                                    <h5 className="card-title">{collection.name}</h5>
-                                    <h6 className="card-subtitle mb-2 text-muted">{collection.symbol}</h6>
-                                    <h6 className="card-subtitle mb-2 text-muted">{collection.address}</h6>
-                                </div>
+                                <Link to={`${collection.address}`}>
+                                    <div className="card-body">
+                                        <h5 className="card-title">{collection.name}</h5>
+                                        <h6 className="card-subtitle mb-2 text-muted">{collection.symbol}</h6>
+                                        <h6 className="card-subtitle mb-2 text-muted">{collection.address}</h6>
+                                    </div>
+                                </Link>
                             </div>
                         </div>
                     ))

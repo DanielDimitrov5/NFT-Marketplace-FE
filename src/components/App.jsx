@@ -9,11 +9,12 @@ import Home from '../pages/Home';
 import Item from '../pages/Item';
 import CreateCollection from '../pages/CreateCollection';
 import Collections from '../pages/Collections';
+import AddItem from '../pages/AddItem';
+import Collection from '../pages/Collection';
 import Styleguide from '../pages/Styleguide';
 
 import Header from './layout/Header';
 import Footer from './layout/Footer';
-import AddItem from '../pages/AddItem';
 
 function App() {
     const { provider } = configureChains([sepolia], [publicProvider()]);
@@ -34,6 +35,7 @@ function App() {
                             <Route path="/item/:id" element={<Item />} />
                             <Route path="/create-collection" element={<CreateCollection />} />
                             <Route path="/collections" element={<Collections />} />
+                            <Route path="/collections/:id" element={<Collection />} />
                             <Route path="/add-item" element={<AddItem />} />
                             <Route path="styleguide" element={<Styleguide />} />
                         </Routes>

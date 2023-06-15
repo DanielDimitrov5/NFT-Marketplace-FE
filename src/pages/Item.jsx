@@ -33,6 +33,14 @@ const Item = () => {
         metadata.data.image = metadata.data.image.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
 
         setData({ item, metadata })
+
+        // const eventFilter = nftContract.filters.Transfer([ethers.constants.AddressZero]);
+        // const events = await nftContract.queryFilter(eventFilter);
+
+        // const arrIds = events.map((event) => {
+        //     return event.args.tokenId.toString();
+        // });
+        // console.log(arrIds)
     }
 
     useEffect(() => {
@@ -51,7 +59,7 @@ const Item = () => {
                         <h1>{data?.metadata?.data?.name}</h1>
                         <p>{data?.metadata?.data?.description}</p>
                         <p>Owner: {data?.item?.owner}</p>
-                        <p>Price: {ethers.utils.formatEther(data?.item?.price.toString())} <FontAwesomeIcon icon={faEthereum} /></p>
+                        <p>Price: {ethers.utils.formatEther(data?.item?.price.toString())}</p>
                     </div>
                 </div> : (
                     <div className="text-center">

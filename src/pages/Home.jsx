@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import { erc721ABI } from 'wagmi';
 import axios from 'axios';
 import ItemCards from '../components/ItemCards';
+import { loadItems } from '../services/helpers';
 
 const marketplaceContract = {
     address: '0xa79Ef7898394B79b809043B9CDE8Dbc1f3550E02',
@@ -12,7 +13,6 @@ const marketplaceContract = {
 
 const NETWORK = process.env.REACT_APP_NETWORK;
 const API_KEY = process.env.REACT_APP_API_KEY;
-const IPFS_PROVIDER = process.env.REACT_APP_IPFS_PROVIDER;
 
 function Home() {
 
@@ -30,46 +30,7 @@ function Home() {
             provider,
         );
 
-        const count = await contract.itemCount();
-
-        const countArr = Array.from({ length: count.toNumber() }, (_, i) => i + 1);
-
-        const itemsPromises = countArr.map((item) => contract.items(item));
-
-        const items = await Promise.all(itemsPromises);
-
-        const URIPrimises = items.map((item) => {
-            const nftContract = new ethers.Contract(
-                item.nftContract,
-                erc721ABI,
-                provider,
-            );
-            const tokenUri = nftContract.tokenURI(item.tokenId);
-            return tokenUri;
-        });
-
-
-        const URIs = await Promise.all(URIPrimises);
-
-        const URIsModified = URIs.map((uri) => {
-            return uri.replace('ipfs://', IPFS_PROVIDER);
-        });
-
-        const metadataPromises = URIsModified.map((uri) => {
-            return axios.get(uri);
-        });
-
-        const metadataArr = await Promise.all(metadataPromises);
-
-        const metadataArrModified = metadataArr.map((metadata) => {
-            return {
-                ...metadata,
-                name: metadata.data.name,
-                image: metadata.data.image.replace('ipfs://', IPFS_PROVIDER),
-                description: metadata.data.description,
-            };
-        });
-
+        const { items, metadataArrModified } = await loadItems(contract);
 
         setContractData({ ...contractData, items, metaData: metadataArrModified });
         setIsLoadingContractData(false);
@@ -77,7 +38,7 @@ function Home() {
 
     useEffect(() => {
         getContractData();
-    }, [contract]);
+    }, []);
 
     return <ItemCards contractData={contractData} isLoadingContractData={isLoadingContractData} />;
 }

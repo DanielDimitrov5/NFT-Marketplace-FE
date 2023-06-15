@@ -1,7 +1,58 @@
 import { ethers } from "ethers";
 import { erc721ABI } from "wagmi";
+import axios from "axios";
 
-export default async function loadCollections(contract) {
+const loadItems = async (contract) => {
+    try {
+        const count = await contract.itemCount();
+
+        const countArr = Array.from({ length: count.toNumber() }, (_, i) => i + 1);
+
+        const itemsPromises = countArr.map((item) => contract.items(item));
+
+        const items = await Promise.all(itemsPromises);
+
+        const URIPrimises = items.map((item) => {
+            const nftContract = new ethers.Contract(
+                item.nftContract,
+                erc721ABI,
+                contract.provider,
+            );
+            const tokenUri = nftContract.tokenURI(item.tokenId);
+            return tokenUri;
+        });
+
+
+        const URIs = await Promise.all(URIPrimises);
+
+        const URIsModified = URIs.map((uri) => {
+            return uri.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
+        });
+
+        const metadataPromises = URIsModified.map((uri) => {
+            return axios.get(uri);
+        });
+
+        const metadataArr = await Promise.all(metadataPromises);
+
+        const metadataArrModified = metadataArr.map((metadata) => {
+            return {
+                ...metadata,
+                name: metadata.data.name,
+                image: metadata.data.image.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER),
+                description: metadata.data.description,
+            };
+        });
+
+        return { items, metadataArrModified };
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export { loadItems };
+
+const loadCollections = async (contract) => {
     try {
         const count = await contract.collectionCount();
         const countArr = Array.from({ length: count.toNumber() }, (_, i) => i + 1);
@@ -33,3 +84,6 @@ export default async function loadCollections(contract) {
         console.log(err);
     }
 }
+
+export { loadCollections };
+
