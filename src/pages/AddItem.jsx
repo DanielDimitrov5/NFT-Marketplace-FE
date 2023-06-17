@@ -5,7 +5,7 @@ import marketplaceABI from "../contractData/abi/NFTMarketplace.json";
 import { loadCollections } from "../services/helpers";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEthereum } from "@fortawesome/free-brands-svg-icons"
-import { Button, Popover, InputNumber, Space, Form } from 'antd';
+import { Link } from "react-router-dom";
 
 const AddItem = () => {
     const { isConnected, address } = useAccount();
@@ -14,7 +14,7 @@ const AddItem = () => {
 
 
     const marketplaceContract = {
-        address: '0xa79Ef7898394B79b809043B9CDE8Dbc1f3550E02',
+        address: '0x283986BAd88488eFa031AD6734926401c5Cfe127',
         abi: marketplaceABI,
     }
 
@@ -38,10 +38,6 @@ const AddItem = () => {
         }
     }
 
-    const handleSubmit = (value) => {
-        console.log(value);
-    };
-
     useEffect(() => {
         loadCollectionData();
     }, [])
@@ -61,17 +57,17 @@ const AddItem = () => {
                         <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
                     </div>
                 ) : (
-                    collectionData.map((collection, index) => (
+
+                    collectionData?.map((collection, index) => (
                         <div className="col-12 col-md-6 col-lg-4" key={index}>
-                            <div className="card" style={{
-                                clear: 'both',
-                                whiteSpace: 'nowrap',
-                            }}>
-                                <div className="card-body">
-                                    <h5 className="card-title">{collection.name}</h5>
-                                    <h6 className="card-subtitle mb-2 text-muted">{collection.symbol}</h6>
-                                    <h6 className="card-subtitle mb-2 text-muted">{collection.address}</h6>
-                                </div>
+                            <div className="card">
+                                <Link to={`${collection.address}`}>
+                                    <div className="card-body">
+                                        <h5 className="card-title">{collection.name}</h5>
+                                        <h6 className="card-subtitle mb-2 text-muted">{collection.symbol}</h6>
+                                        <h6 className="card-subtitle mb-2 text-muted">{collection.address}</h6>
+                                    </div>
+                                </Link>
                             </div>
                         </div>
                     ))

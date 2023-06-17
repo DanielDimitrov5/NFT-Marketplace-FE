@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEthereum } from "@fortawesome/free-brands-svg-icons"
 
 const marketplaceContract = {
-    address: '0xa79Ef7898394B79b809043B9CDE8Dbc1f3550E02',
+    address: '0x283986BAd88488eFa031AD6734926401c5Cfe127',
     abi: marketplaceABI,
 }
 
@@ -34,14 +34,6 @@ const Item = () => {
         metadata.data.image = metadata.data.image.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
 
         setData({ item, metadata })
-
-        // const eventFilter = nftContract.filters.Transfer([ethers.constants.AddressZero]);
-        // const events = await nftContract.queryFilter(eventFilter);
-
-        // const arrIds = events.map((event) => {
-        //     return event.args.tokenId.toString();
-        // });
-        // console.log(arrIds)
     }
 
     useEffect(() => {
