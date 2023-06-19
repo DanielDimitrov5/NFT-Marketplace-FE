@@ -12,6 +12,7 @@ import Collections from '../pages/Collections';
 import AddItem from '../pages/AddItem';
 import ChooseItem from '../pages/ChooseItem';
 import Collection from '../pages/Collection';
+import ListItem from '../pages/ListItem';
 import Styleguide from '../pages/Styleguide';
 
 import Header from './layout/Header';
@@ -39,6 +40,7 @@ function App() {
                             <Route path="/collections/:id" element={<Collection />} />
                             <Route path="/add-item-from" element={<AddItem />} />
                             <Route path="/add-item-from/:id" element={<ChooseItem />} />
+                            <Route path="/list-item" element={<ListItem />} />
                             <Route path="styleguide" element={<Styleguide />} />
                         </Routes>
                     </div>

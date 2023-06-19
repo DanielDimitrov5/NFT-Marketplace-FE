@@ -188,5 +188,21 @@ const addItemToMarketplace = async (provider, collectionAddress, tokenId) => {
     }
 }
 
-export { loadItems, loadCollections, loadCollectionItems, addItemToMarketplace, getItem };
+const loadItemsForListing = async (provider, address) => {
+    try {
+        const { items, metadataArrModified } = await loadItems(provider);
+
+        const filteredItems = items.filter(item => item.owner === address && parseInt(item.price) === 0);
+
+        const ids = filteredItems.map(item => parseInt(item.tokenId));
+
+        const nfts = metadataArrModified.filter(item => ids.includes(item.tokenId));
+
+        return { filteredItems, nfts };
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export { loadItems, loadCollections, loadCollectionItems, addItemToMarketplace, getItem, loadItemsForListing };
 

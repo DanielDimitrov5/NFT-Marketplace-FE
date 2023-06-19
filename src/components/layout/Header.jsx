@@ -54,7 +54,7 @@ function Header() {
                             <NavDropdown.Item as={Link} to={'/create-collection'} onClick={handleSelect}>Create NFT collection</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/collections'} onClick={handleSelect}>View NFT collections</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/add-item-from'} onClick={handleSelect}>Add item</ NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3" onClick={handleSelect}>List Item</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={'/list-item'} onClick={handleSelect}>List item</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
                     <div className="d-flex">
