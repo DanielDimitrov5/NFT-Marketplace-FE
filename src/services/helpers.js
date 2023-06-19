@@ -8,6 +8,9 @@ const marketplaceContract = {
     abi: marketplaceABI,
 }
 
+const regex = new RegExp(`^ipfs:\/\/|^ipfs;\/\/`);
+
+
 const loadItems = async (provider) => {
     try {
         const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
@@ -34,7 +37,7 @@ const loadItems = async (provider) => {
         const URIs = await Promise.all(URIPromises);
 
         const URIsModified = URIs.map((uri) => {
-            return uri.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
+            return uri.replace(regex, process.env.REACT_APP_IPFS_PROVIDER);
         });
 
         const metadataPromises = URIsModified.map((uri) => {
@@ -60,6 +63,22 @@ const loadItems = async (provider) => {
     }
 }
 
+const getItem = async (id) => {
+    const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
+    const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
+
+    const item = await contract.items(id)
+
+    const nftContract = new ethers.Contract(item.nftContract, erc721ABI, provider);
+
+    const tokenUri = (await nftContract.tokenURI(item.tokenId)).replace(regex, process.env.REACT_APP_IPFS_PROVIDER);
+
+    const metadata = await axios.get(tokenUri);
+
+    metadata.data.image = metadata.data.image.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
+
+    return { item, metadata };
+}
 
 const loadCollections = async (contract) => {
     try {
@@ -111,8 +130,10 @@ const loadCollectionItems = async (provider, collectionAddress) => {
 
         const URIs = await Promise.all(URIPromises);
 
+        const regex = new RegExp(`^ipfs:\/\/|^ipfs;\/\/`);
+
         const URIsModified = URIs.map((uri) => {
-            return uri.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
+            return uri.replace(regex, process.env.REACT_APP_IPFS_PROVIDER)
         });
 
         const metadataPromises = URIsModified.map((uri) => {
@@ -132,7 +153,6 @@ const loadCollectionItems = async (provider, collectionAddress) => {
             };
         });
 
-        // console.log(metadataArrModified);
         return metadataArrModified
     }
     catch (err) {
@@ -161,10 +181,12 @@ const addItemToMarketplace = async (provider, collectionAddress, tokenId) => {
         const transaction = await contract.addItem(collectionid, tokenId, { gasLimit: 300000 });
 
         await transaction.wait();
+
+        return transaction.status;
     } catch (error) {
         console.log(error);
     }
 }
 
-export { loadItems, loadCollections, loadCollectionItems, addItemToMarketplace };
+export { loadItems, loadCollections, loadCollectionItems, addItemToMarketplace, getItem };
 
