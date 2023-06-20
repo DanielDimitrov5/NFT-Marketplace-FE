@@ -46,33 +46,43 @@ const AddItem = () => {
     return (
         <div className="container">
             <br />
-            <div className="row">
-                <div className="col-12">
-                    <h1>Choose collection to add item from</h1>
-                </div>
-            </div>
-            <div className="row">
-                {isLoading ? (
-                    <div className="text-center">
-                        <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
-                    </div>
-                ) : (
-
-                    collectionData?.map((collection, index) => (
-                        <div className="col-12 col-md-6 col-lg-4" key={index}>
-                            <div className="card">
-                                <Link to={`${collection.address}`}>
-                                    <div className="card-body">
-                                        <h5 className="card-title">{collection.name}</h5>
-                                        <h6 className="card-subtitle mb-2 text-muted">{collection.symbol}</h6>
-                                        <h6 className="card-subtitle mb-2 text-muted">{collection.address}</h6>
-                                    </div>
-                                </Link>
-                            </div>
+            {isConnected ? (
+                <>
+                    <div className="row">
+                        <div className="col-12">
+                            <h1>Choose collection to add item from</h1>
                         </div>
-                    ))
-                )}
-            </div>
+                    </div>
+                    <div className="row">
+                        {isLoading ? (
+                            <div className="text-center">
+                                <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
+                            </div>
+                        ) : (
+
+                            collectionData?.map((collection, index) => (
+                                <div className="col-12 col-md-6 col-lg-4" key={index}>
+                                    <div className="card">
+                                        <Link to={`${collection.address}`}>
+                                            <div className="card-body">
+                                                <h5 className="card-title">{collection.name}</h5>
+                                                <h6 className="card-subtitle mb-2 text-muted">{collection.symbol}</h6>
+                                                <h6 className="card-subtitle mb-2 text-muted">{collection.address}</h6>
+                                            </div>
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </>
+            ) : (
+                <div className="row">
+                    <div className="col-12">
+                        <h1>Please connect your wallet</h1>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

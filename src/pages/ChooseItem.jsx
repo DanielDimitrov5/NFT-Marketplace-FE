@@ -31,6 +31,7 @@ const ChooseItem = () => {
         }
 
         const nfts = await loadCollectionItems(provider, nftContractAddress);
+        console.log(nfts);
 
         const itemsFilteredIds = nfts.filter(item => !ids.includes(item.tokenId)).map(item => parseInt(item.tokenId));
 
@@ -40,6 +41,7 @@ const ChooseItem = () => {
 
         for (let i = 0; i < itemsFilteredIds.length; i++) {
             const tokenId = itemsFilteredIds[i];
+            console.log(tokenId);
             const owner = await contract.ownerOf(tokenId);
 
             if (owner === address) {

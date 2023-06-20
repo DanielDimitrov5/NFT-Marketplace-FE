@@ -1,9 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { ethers } from "ethers"
-import { erc721ABI } from "wagmi"
-import axios from "axios"
-import marketplaceABI from "../contractData/abi/NFTMarketplace.json"
 import { Link } from "react-router-dom"
 import { getItem } from "../services/helpers"
 

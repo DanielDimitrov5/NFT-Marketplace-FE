@@ -204,5 +204,22 @@ const loadItemsForListing = async (provider, address) => {
     }
 }
 
-export { loadItems, loadCollections, loadCollectionItems, addItemToMarketplace, getItem, loadItemsForListing };
+const listItemForSale = async (provider, collectionAddress, tokenId, price) => {
+    try {
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
+
+        const items = await loadItems(provider);
+        const itemId = parseInt(items.items.filter(item => item.nftContract === collectionAddress && parseInt(item.tokenId) === tokenId)[0].id);
+
+        const transaction = await contract.listItem(itemId, price, { gasLimit: 300000 });
+
+        await transaction.wait();
+
+        return transaction.status;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export { loadItems, loadCollections, loadCollectionItems, addItemToMarketplace, getItem, loadItemsForListing, listItemForSale };
 
