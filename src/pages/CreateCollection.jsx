@@ -14,7 +14,7 @@ const CreateCollection = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const marketplaceContract = {
-        address: '0x283986BAd88488eFa031AD6734926401c5Cfe127',
+        address: '0x45feff1D2967352726453a963Ec41003a1523C9c',
         abi: marketplaceABI,
     }
 
@@ -35,6 +35,8 @@ const CreateCollection = () => {
             console.error(error);
         }
         finally {
+            setCollectionName("");
+            setCollectionSymbol("");
             setIsLoading(false);
         }
     }

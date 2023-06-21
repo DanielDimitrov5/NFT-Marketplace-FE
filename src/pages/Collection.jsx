@@ -41,7 +41,7 @@ const Collection = () => {
                     <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
                 </div>
             ) : (
-                contractData.items.length === 0 ? <p>This collection is empty. <Link href="/add-item">Add item</Link> from this collection if you own one.</p>
+                contractData.items.length === 0 ? <p>We don't have any items from this collection. <Link href={`/add-item-from/${nftContractAddress}`}>Add item</Link> from this collection if you own one.</p>
                     : <ItemCards contractData={contractData} isLoadingContractData={isLoadingContractData} />)
             }
         </>

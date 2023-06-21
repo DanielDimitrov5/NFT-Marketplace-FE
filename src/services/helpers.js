@@ -4,7 +4,7 @@ import axios from "axios";
 import marketplaceABI from '../contractData/abi/NFTMarketplace.json';
 
 const marketplaceContract = {
-    address: '0x283986BAd88488eFa031AD6734926401c5Cfe127',
+    address: '0x45feff1D2967352726453a963Ec41003a1523C9c',
     abi: marketplaceABI,
 }
 
@@ -130,10 +130,8 @@ const loadCollectionItems = async (provider, collectionAddress) => {
 
         const URIs = await Promise.all(URIPromises);
 
-        const regex = new RegExp(`^ipfs:\/\/|^ipfs;\/\/`);
-
         const URIsModified = URIs.map((uri) => {
-            return uri.replace(regex, process.env.REACT_APP_IPFS_PROVIDER)
+            return uri.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER)
         });
 
         const metadataPromises = URIsModified.map((uri) => {
@@ -180,9 +178,8 @@ const addItemToMarketplace = async (provider, collectionAddress, tokenId) => {
 
         const transaction = await contract.addItem(collectionid, tokenId, { gasLimit: 300000 });
 
-        await transaction.wait();
-
-        return transaction.status;
+        const tx = await transaction.wait();
+        return tx.status;
     } catch (error) {
         console.log(error);
     }
@@ -216,10 +213,10 @@ const listItemForSale = async (provider, collectionAddress, tokenId, price) => {
         const nftContract = new ethers.Contract(collectionAddress, erc721ABI, provider);
         const approveTransaction = await nftContract.approve(marketplaceContract.address, tokenId, { gasLimit: 300000 });
 
-        await transaction.wait();
+        const tx = await transaction.wait();
         await approveTransaction.wait();
 
-        return transaction.status;
+        return tx.transaction.status;
     } catch (error) {
         console.log(error);
     }
@@ -231,9 +228,9 @@ const buyItem = async (signer, itemId, price) => {
 
         const transaction = await contract.buyItem(itemId, { value: price, gasLimit: 300000 });
 
-        await transaction.wait();
+        const tx = await transaction.wait();
 
-        return transaction.status;
+        return tx.status;
     } catch (error) {
         console.log(error);
     }
@@ -245,9 +242,9 @@ const addExistingCollection = async (signer, address) => {
 
         const transaction = await contract.addCollection(address, { gasLimit: 300000 });
 
-        await transaction.wait();
+        const tx = await transaction.wait();
 
-        return transaction.status;
+        return tx.status;
     } catch (error) {
         console.log(error);
     }
