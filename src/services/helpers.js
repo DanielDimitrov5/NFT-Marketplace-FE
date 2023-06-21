@@ -213,6 +213,24 @@ const listItemForSale = async (provider, collectionAddress, tokenId, price) => {
 
         const transaction = await contract.listItem(itemId, price, { gasLimit: 300000 });
 
+        const nftContract = new ethers.Contract(collectionAddress, erc721ABI, provider);
+        const approveTransaction = await nftContract.approve(marketplaceContract.address, tokenId, { gasLimit: 300000 });
+
+        await transaction.wait();
+        await approveTransaction.wait();
+
+        return transaction.status;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const buyItem = async (signer, itemId, price) => {
+    try {
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, signer);
+
+        const transaction = await contract.buyItem(itemId, { value: price, gasLimit: 300000 });
+
         await transaction.wait();
 
         return transaction.status;
@@ -221,5 +239,19 @@ const listItemForSale = async (provider, collectionAddress, tokenId, price) => {
     }
 }
 
-export { loadItems, loadCollections, loadCollectionItems, addItemToMarketplace, getItem, loadItemsForListing, listItemForSale };
+const addExistingCollection = async (signer, address) => {
+    try {
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, signer);
+
+        const transaction = await contract.addCollection(address, { gasLimit: 300000 });
+
+        await transaction.wait();
+
+        return transaction.status;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export { loadItems, loadCollections, loadCollectionItems, addItemToMarketplace, getItem, loadItemsForListing, listItemForSale, buyItem, addExistingCollection };
 

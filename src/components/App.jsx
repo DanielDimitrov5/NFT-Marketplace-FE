@@ -9,6 +9,7 @@ import Home from '../pages/Home';
 import Item from '../pages/Item';
 import CreateCollection from '../pages/CreateCollection';
 import Collections from '../pages/Collections';
+import AddExistingCollection from '../pages/AddExistingCollection';
 import AddItem from '../pages/AddItem';
 import ChooseItem from '../pages/ChooseItem';
 import Collection from '../pages/Collection';
@@ -36,6 +37,7 @@ function App() {
                             <Route path="/" element={<Home />} />
                             <Route path="/item/:id" element={<Item />} />
                             <Route path="/create-collection" element={<CreateCollection />} />
+                            <Route path="/add-existing-collection" element={<AddExistingCollection />} />
                             <Route path="/collections" element={<Collections />} />
                             <Route path="/collections/:id" element={<Collection />} />
                             <Route path="/add-item-from" element={<AddItem />} />

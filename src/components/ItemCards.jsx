@@ -1,9 +1,36 @@
+import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEthereum } from "@fortawesome/free-brands-svg-icons"
+import { buyItem } from '../services/helpers';
 
 const ItemCards = ({ contractData, isLoadingContractData }) => {
+
+    const [signer, setSigner] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const buyItemById = async (id, price) => {
+        setIsLoading(true);
+        if (signer) {
+            const result = await buyItem(signer, id, price);
+
+            if (result === 1) {
+                alert('Transaction successful!');
+            }
+
+        }
+        setIsLoading(false);
+    }
+
+    useEffect(() => {
+        if (contractData) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            setSigner(signer);
+        }
+    }, [contractData]);
+
     return (
         <div className="container my-5">
             {isLoadingContractData ? (
@@ -36,6 +63,7 @@ const ItemCards = ({ contractData, isLoadingContractData }) => {
                                             <button
                                                 type="button"
                                                 className="btn btn-sm btn-outline-secondary"
+                                                onClick={() => buyItemById(item.id, item.price)}
                                             >
                                                 Buy
                                             </button>
