@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import { loadItemsForListing, listItemForSale } from "../services/helpers";
-import { Button, Popover, Cascader, InputNumber, Select, Space, Form } from 'antd';
+import { Button, Popover, InputNumber } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEthereum } from "@fortawesome/free-brands-svg-icons"
 

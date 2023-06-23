@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { loadCollectionItems, loadItems, addItemToMarketplace } from "../services/helpers";
+import { addItemToMarketplace, loadItemsForAdding } from "../services/helpers";
 import { ethers } from "ethers";
 import Button from "../components/ui/Button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEthereum } from "@fortawesome/free-brands-svg-icons"
-import { useAccount, erc721ABI } from "wagmi";
+import { useAccount } from "wagmi";
 
 const ChooseItem = () => {
 
@@ -20,32 +20,7 @@ const ChooseItem = () => {
 
         const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
 
-        const { items } = await loadItems(provider);
-
-        const ids = items.filter(item => item.nftContract === nftContractAddress).map(item => parseInt(item.tokenId));
-
-        const nfts = await loadCollectionItems(provider, nftContractAddress);
-
-        if (nfts.length === 0) {
-            setIsLoading(false);
-            setItems([]);
-            return;
-        }
-
-        const itemsFilteredIds = nfts.filter(item => !ids.includes(item.tokenId)).map(item => parseInt(item.tokenId));
-
-        const contract = new ethers.Contract(nftContractAddress, erc721ABI, provider);
-
-        const nftsFiltered = [];
-
-        for (let i = 0; i < itemsFilteredIds.length; i++) {
-            const tokenId = itemsFilteredIds[i];
-            const owner = await contract.ownerOf(tokenId);
-
-            if (owner === address) {
-                nftsFiltered.push(nfts.find(nft => parseInt(nft.tokenId) === tokenId));
-            }
-        }
+        const nftsFiltered = await loadItemsForAdding(provider, nftContractAddress, address);
 
         setItems(nftsFiltered);
         setIsLoading(false);

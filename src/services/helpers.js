@@ -5,7 +5,6 @@ import { ethers } from "ethers";
 import { infuraIpfsClient } from "./ipfsClient";
 import nftABI from "../contractData/abi/NFT.json";
 
-
 const marketplaceContract = {
     address: '0x45feff1D2967352726453a963Ec41003a1523C9c',
     abi: marketplaceABI,
@@ -160,6 +159,55 @@ const loadCollectionItems = async (provider, collectionAddress) => {
     }
 };
 
+const loadItemsForAdding = async (provider, collectionAddress, address) => {
+    const contract = new ethers.Contract(collectionAddress, erc721ABI, provider);
+
+    const itemsMarketplaceItemsIds = (await loadItems(provider)).items.filter((item) => {
+        return item.nftContract === collectionAddress;
+    }).map((item) => parseInt(item.tokenId));
+
+    const ids = (await getItemsTokenIds(contract)).filter((id) => {
+        return !itemsMarketplaceItemsIds.includes(id);
+    });
+
+    const promisesOwners = ids.map((id) => {
+        return contract.ownerOf(id);
+    });
+
+    const owners = await Promise.all(promisesOwners);
+
+    const idsFiltered = ids.filter((id, i) => {
+        return owners[i] === address;
+    });
+
+    const promises = idsFiltered.map((id) => {
+        return contract.tokenURI(id);
+    });
+
+    const URIs = (await Promise.all(promises)).map((uri) => {
+        return uri.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
+    });
+
+    const metadataPromises = URIs.map((uri) => {
+        return axios.get(uri);
+    });
+
+    const metadataArr = await Promise.all(metadataPromises);
+
+    const metadataArrModified = metadataArr.map((metadata, i) => {
+        return {
+            ...metadata,
+            name: metadata.data.name,
+            image: metadata.data.image.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER),
+            description: metadata.data.description,
+            nft: metadata.data.nft,
+            tokenId: ids[i]
+        };
+    });
+
+    return metadataArrModified;
+}
+
 const getItemsTokenIds = async (contract) => {
     const eventFilter = contract.filters.Transfer([ethers.constants.AddressZero]);
     const events = await contract.queryFilter(eventFilter);
@@ -199,9 +247,6 @@ const loadItemsForListing = async (provider, address) => {
             });
         });
 
-
-        console.log("1", filteredItems);
-        console.log("2", nfts);
         return { filteredItems, nfts };
     } catch (error) {
         console.log(error);
@@ -271,8 +316,6 @@ const mintNFT = async (signer, collectionAddress, metadata) => {
 
         const coutn = (await contract.tokenCount()).toNumber();
 
-        metadata.tokenId = coutn + 1;
-
         const metadataURI = await uploadToIPFS(JSON.stringify(metadata));
 
         const transaction = await contract.mint(metadataURI, { gasLimit: 300000 });
@@ -298,7 +341,7 @@ const uploadToIPFS = async (file) => {
 }
 
 export {
-    loadItems, loadCollections, loadCollectionItems, addItemToMarketplace,
-    getItem, loadItemsForListing, listItemForSale, buyItem, addExistingCollection, mintNFT
+    loadItems, loadCollections, loadCollectionItems /*remove?*/, addItemToMarketplace,
+    getItem, loadItemsForListing, listItemForSale, buyItem, addExistingCollection, mintNFT, loadItemsForAdding
 };
 

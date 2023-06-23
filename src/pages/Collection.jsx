@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { loadItems, loadCollectionItems } from "../services/helpers";
+import { loadItems } from "../services/helpers";
 import ItemCards from "../components/ItemCards";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEthereum } from "@fortawesome/free-brands-svg-icons"

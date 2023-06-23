@@ -114,7 +114,7 @@ const MintFrom = () => {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="description">Description</label>
-                                        <input type="text" className="form-control" id="description" placeholder="Enter description" value={description} onChange={handleDescriptionChange} />
+                                        <textarea className="form-control" id="description" placeholder="Enter description" value={description} onChange={handleDescriptionChange} />
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="image">Image</label>
