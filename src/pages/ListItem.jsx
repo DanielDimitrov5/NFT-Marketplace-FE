@@ -33,6 +33,8 @@ const ListItem = () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
 
+        console.log(inputValue);
+
         try {
             const result = await listItemForSale(signer, itemProperties.nft, itemProperties.tokenId, ethers.utils.parseEther(inputValue.toString()));
         } catch (error) {

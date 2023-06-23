@@ -53,6 +53,7 @@ function Header() {
                             <NavDropdown.Item as={Link} to={'/'} onClick={handleSelect}>Home</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/create-collection'} onClick={handleSelect}>Create NFT collection</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/add-existing-collection'} onClick={handleSelect}>Add existing NFT collection</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={'/mint-from'} onClick={handleSelect}>Mint</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/collections'} onClick={handleSelect}>View NFT collections</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/add-item-from'} onClick={handleSelect}>Add item</ NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/list-item'} onClick={handleSelect}>List item</NavDropdown.Item>

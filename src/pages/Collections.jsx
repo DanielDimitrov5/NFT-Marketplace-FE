@@ -20,9 +20,8 @@ const Collections = () => {
 
         try {
             const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
-            const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
 
-            const resolvedCollections = await loadCollections(contract);
+            const resolvedCollections = await loadCollections(provider);
 
             setCollections(resolvedCollections);
         } catch (err) {

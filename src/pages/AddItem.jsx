@@ -23,9 +23,8 @@ const AddItem = () => {
 
         try {
             const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
-            const marketplace = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
 
-            const collections = await loadCollections(marketplace);
+            const collections = await loadCollections(provider);
 
             setCollectionData(collections);
 

@@ -1,15 +1,15 @@
-import { BigNumber, ethers } from "ethers";
 import { erc721ABI } from "wagmi";
 import axios from "axios";
 import marketplaceABI from '../contractData/abi/NFTMarketplace.json';
+import { ethers } from "ethers";
+import { infuraIpfsClient } from "./ipfsClient";
+import nftABI from "../contractData/abi/NFT.json";
+
 
 const marketplaceContract = {
     address: '0x45feff1D2967352726453a963Ec41003a1523C9c',
     abi: marketplaceABI,
 }
-
-const regex = new RegExp(`^ipfs:\/\/|^ipfs;\/\/`);
-
 
 const loadItems = async (provider) => {
     try {
@@ -37,7 +37,7 @@ const loadItems = async (provider) => {
         const URIs = await Promise.all(URIPromises);
 
         const URIsModified = URIs.map((uri) => {
-            return uri.replace(regex, process.env.REACT_APP_IPFS_PROVIDER);
+            return uri.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
         });
 
         const metadataPromises = URIsModified.map((uri) => {
@@ -71,7 +71,7 @@ const getItem = async (id) => {
 
     const nftContract = new ethers.Contract(item.nftContract, erc721ABI, provider);
 
-    const tokenUri = (await nftContract.tokenURI(item.tokenId)).replace(regex, process.env.REACT_APP_IPFS_PROVIDER);
+    const tokenUri = (await nftContract.tokenURI(item.tokenId)).replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
 
     const metadata = await axios.get(tokenUri);
 
@@ -80,8 +80,10 @@ const getItem = async (id) => {
     return { item, metadata };
 }
 
-const loadCollections = async (contract) => {
+const loadCollections = async (provider) => {
     try {
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
+
         const count = await contract.collectionCount();
         const countArr = Array.from({ length: count.toNumber() }, (_, i) => i + 1);
         const collectionsPromises = countArr.map((collection) => contract.collections(collection));
@@ -191,10 +193,15 @@ const loadItemsForListing = async (provider, address) => {
 
         const filteredItems = items.filter(item => item.owner === address && parseInt(item.price) === 0);
 
-        const ids = filteredItems.map(item => parseInt(item.tokenId));
+        const nfts = metadataArrModified.filter((item) => {
+            return filteredItems.some((item2) => {
+                return item.tokenId === parseInt(item2.tokenId) && item.nft === item2.nftContract;
+            });
+        });
 
-        const nfts = metadataArrModified.filter(item => ids.includes(item.tokenId));
 
+        console.log("1", filteredItems);
+        console.log("2", nfts);
         return { filteredItems, nfts };
     } catch (error) {
         console.log(error);
@@ -250,5 +257,48 @@ const addExistingCollection = async (signer, address) => {
     }
 }
 
-export { loadItems, loadCollections, loadCollectionItems, addItemToMarketplace, getItem, loadItemsForListing, listItemForSale, buyItem, addExistingCollection };
+const mintNFT = async (signer, collectionAddress, metadata) => {
+
+    const { name, description, image } = metadata;
+
+    const imageHash = await uploadToIPFS(image);
+
+    metadata.image = imageHash;
+    metadata.nft = collectionAddress;
+
+    try {
+        const contract = new ethers.Contract(collectionAddress, nftABI, signer);
+
+        const coutn = (await contract.tokenCount()).toNumber();
+
+        metadata.tokenId = coutn + 1;
+
+        const metadataURI = await uploadToIPFS(JSON.stringify(metadata));
+
+        const transaction = await contract.mint(metadataURI, { gasLimit: 300000 });
+
+        const tx = await transaction.wait();
+
+        return tx.status;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const uploadToIPFS = async (file) => {
+    try {
+        const addedFile = await infuraIpfsClient.add(file);
+        const hash = addedFile.path;
+
+        return 'ipfs://' + hash;
+    } catch (err) {
+        console.log(err);
+        return;
+    }
+}
+
+export {
+    loadItems, loadCollections, loadCollectionItems, addItemToMarketplace,
+    getItem, loadItemsForListing, listItemForSale, buyItem, addExistingCollection, mintNFT
+};
 

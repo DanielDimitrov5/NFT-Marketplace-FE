@@ -9,6 +9,8 @@ import Home from '../pages/Home';
 import Item from '../pages/Item';
 import CreateCollection from '../pages/CreateCollection';
 import Collections from '../pages/Collections';
+import MintFrom from '../pages/MintFrom';
+import MintNFT from '../pages/MintNFT';
 import AddExistingCollection from '../pages/AddExistingCollection';
 import AddItem from '../pages/AddItem';
 import ChooseItem from '../pages/ChooseItem';
@@ -38,6 +40,8 @@ function App() {
                             <Route path="/item/:id" element={<Item />} />
                             <Route path="/create-collection" element={<CreateCollection />} />
                             <Route path="/add-existing-collection" element={<AddExistingCollection />} />
+                            <Route path="/mint-from" element={<MintFrom />} />
+                            <Route path="/mint-from/:id" element={<MintNFT />} />
                             <Route path="/collections" element={<Collections />} />
                             <Route path="/collections/:id" element={<Collection />} />
                             <Route path="/add-item-from" element={<AddItem />} />
