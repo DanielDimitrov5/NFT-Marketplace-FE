@@ -33,8 +33,6 @@ const ListItem = () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
 
-        console.log(inputValue);
-
         try {
             const result = await listItemForSale(signer, itemProperties.nft, itemProperties.tokenId, ethers.utils.parseEther(inputValue.toString()));
         } catch (error) {
@@ -58,9 +56,9 @@ const ListItem = () => {
                 onChange={setInputValue}
             />
             {inputValue > 0 ? (
-                <Button type="primary" size="middle" shape="round" onClick={() => list()}>List</Button>
+                <Button type="primary" onClick={() => list()}>List</Button>
             ) : (
-                <Button type="primary" size="middle" shape="round" disabled>List</Button>
+                <Button type="primary" disabled>List</Button>
             )}
         </div>
     );
@@ -73,39 +71,48 @@ const ListItem = () => {
         <div className="container">
             <div className="row">
                 <div className="col-12">
-                    <br />
-                    <h1 className="text-center">List Item</h1>
-                    {isLoading ? (
-                        <div className="text-center">
-                            <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
+                    {!isConnected ? (
+                        <div className="col-12">
+                            <br />
+                            <h1>Please connect your wallet</h1>
                         </div>
                     ) : (
                         <>
-                            {items.length === 0 ? (
+                            <br />
+                            <h1 className="text-center">List Item</h1>
+                            {isLoading ? (
                                 <div className="text-center">
-                                    <p>No items found</p>
+                                    <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
                                 </div>
                             ) : (
-                                <div className="row">
-                                    {items.nfts.map((nft, i) => (
-                                        <div className="col-12 col-md-6 col-lg-4" key={i}>
-                                            <div className="card mb-3">
-                                                <img src={nft.image} className="card-img-top" alt={nft.name} />
-                                                <div className="card-body">
-                                                    <h5 className="card-title">{nft.name}</h5>
-                                                    <p className="card-text">{nft.description}</p>
-                                                    <p className="card-text"><small className="text-muted">{nft.nft}</small></p>
-                                                    <Popover placement="bottom" content={content} title="Set price">
-                                                        <button onClick={() => {
-                                                            setInputValue(0);
-                                                            setProperties(nft.nft, nft.tokenId);
-                                                        }} className="btn btn-primary">List</button>
-                                                    </Popover>
-                                                </div>
-                                            </div>
+                                <>
+                                    {items.length === 0 ? (
+                                        <div className="text-center">
+                                            <p>No items found</p>
                                         </div>
-                                    ))}
-                                </div>
+                                    ) : (
+                                        <div className="row">
+                                            {items.nfts.map((nft, i) => (
+                                                <div className="col-12 col-md-6 col-lg-4" key={i}>
+                                                    <div className="card mb-3">
+                                                        <img src={nft.image} className="card-img-top" alt={nft.name} />
+                                                        <div className="card-body">
+                                                            <h5 className="card-title">{nft.name}</h5>
+                                                            <p className="card-text">{nft.description}</p>
+                                                            <p className="card-text"><small className="text-muted">{nft.nft}</small></p>
+                                                            <Popover trigger={'click'} placement="bottom" content={content} title="Set price">
+                                                                <button onClick={() => {
+                                                                    setInputValue(0);
+                                                                    setProperties(nft.nft, nft.tokenId);
+                                                                }} className="btn btn-primary">List</button>
+                                                            </Popover>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </>
                     )}

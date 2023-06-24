@@ -67,6 +67,8 @@ const MintFrom = () => {
             setName('');
             setDescription('');
             setImage('');
+
+            document.getElementById('image').value = '';
         }
     }
 

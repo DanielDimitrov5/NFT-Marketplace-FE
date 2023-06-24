@@ -254,10 +254,16 @@ const loadItemsForListing = async (provider, address) => {
 }
 
 const listItemForSale = async (provider, collectionAddress, tokenId, price) => {
+    if (price <= 0) {
+        alert('Price must be greater than 0');
+        return;
+    }
+
     try {
         const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
 
         const items = await loadItems(provider);
+
         const itemId = parseInt(items.items.filter(item => item.nftContract === collectionAddress && parseInt(item.tokenId) === tokenId)[0].id);
 
         const transaction = await contract.listItem(itemId, price, { gasLimit: 300000 });

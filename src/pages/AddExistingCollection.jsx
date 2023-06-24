@@ -2,11 +2,14 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { isAddress } from "ethers/lib/utils.js";
 import { addExistingCollection } from "../services/helpers";
+import { useAccount } from "wagmi";
 
 const AddExistingCollection = () => {
     const [collectionAddress, setCollectionAddress] = useState("");
     const [isValidAddress, setIsValidAddress] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const { isConnected, address } = useAccount();
 
     const handleAddressChange = (e) => {
         const address = e.target.value;
@@ -41,43 +44,53 @@ const AddExistingCollection = () => {
             <div className="container">
                 <div className="row">
                     <div className="col-12">
-                        <br />
-                        <h1 className="text-center">Add Existing Collection</h1>
-                        <div className="text-center">
-                            <p>Enter the address of the collection you want to add</p>
-                        </div>
-                        {!isSubmitting ? (
-                            <form onSubmit={handleSubmit}>
-                                <div className="mb-3">
-                                    <label htmlFor="collectionName" className="form-label">
-                                        NFT Collection address
-                                    </label>
-                                    <input
-                                        onChange={handleAddressChange}
-                                        type="text"
-                                        className={`form-control ${isValidAddress ? "" : "is-invalid"}`}
-                                        id="collectionName"
-                                    />
-                                    {!isValidAddress && (
-                                        <div className="invalid-feedback">Invalid address</div>
-                                    )}
-                                </div>
-                                <div className="text-center">
-                                    {isValidAddress ? (
-                                        <button type="submit" className="btn btn-primary">
-                                            Add
-                                        </button>
-                                    ) : (
-                                        <button type="submit" className="btn btn-primary" disabled>
-                                            Add
-                                        </button>
-                                    )}
-                                </div>
-                            </form>
-                        ) : (
-                            <div className="text-center">
-                                <p>Adding collection...</p>
+                        {!isConnected ? (
+                            <div className="col-12">
+                                <br />
+                                <h1>Please connect your wallet</h1>
                             </div>
+                        ) : (
+                            <>
+                                <br />
+                                <h1 className="text-center">Add Existing Collection</h1>
+                                <div className="text-center">
+                                    <p>Enter the address of the collection you want to add</p>
+                                </div>
+                                {!isSubmitting ? (
+                                    <form onSubmit={handleSubmit}>
+                                        <div className="mb-3">
+                                            <label htmlFor="collectionName" className="form-label">
+                                                NFT Collection address
+                                            </label>
+                                            <input
+                                                onChange={handleAddressChange}
+                                                type="text"
+                                                className={`form-control ${isValidAddress ? "" : "is-invalid"}`}
+                                                id="collectionName"
+                                            />
+                                            {!isValidAddress && (
+                                                <div className="invalid-feedback">Invalid address</div>
+                                            )}
+                                        </div>
+                                        <div className="text-center">
+                                            {isValidAddress ? (
+                                                <button type="submit" className="btn btn-primary">
+                                                    Add
+                                                </button>
+                                            ) : (
+                                                <button type="submit" className="btn btn-primary" disabled>
+                                                    Add
+                                                </button>
+                                            )}
+                                        </div>
+                                    </form>
+                                ) : (
+                                    <div className="text-center">
+                                        <p>Adding collection...</p>
+                                    </div>
+                                )}
+
+                            </>
                         )}
                     </div>
                 </div>
