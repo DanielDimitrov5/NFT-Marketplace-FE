@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { ethers } from "ethers"
 import { Link } from "react-router-dom"
 import { getItem } from "../services/helpers"
+import { Image } from 'antd';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEthereum } from "@fortawesome/free-brands-svg-icons";
@@ -27,7 +28,9 @@ const Item = () => {
             {data ?
                 <div className="row">
                     <div className="col-12 col-md-6">
-                        <img src={data?.metadata?.data?.image} alt={data?.metadata?.data?.name} style={{ height: '600px', objectFit: 'cover' }} />
+                        <Image.PreviewGroup>
+                            <Image width={550} src={data?.metadata?.data?.image} />
+                        </Image.PreviewGroup>
                     </div>
                     <div className="col-12 col-md-6">
                         <br />
@@ -35,7 +38,9 @@ const Item = () => {
                         <p>{data?.metadata?.data?.description}</p>
                         <p>Collection: <Link to={`/collections/${data?.item?.nftContract}`}>{data?.item?.nftContract}</Link></p>
                         <p>Owner: {data?.item?.owner}</p>
-                        <p>Price: {ethers.utils.formatEther(data?.item?.price.toString())}</p>
+                        {data?.item?.price.toString() !== '0' &&
+                            <p>Price: {ethers.utils.formatEther(data?.item?.price.toString())}</p>
+                        }
                     </div>
                 </div> : (
                     <div className="text-center">

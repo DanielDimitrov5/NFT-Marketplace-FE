@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { WagmiConfig, configureChains, createClient } from 'wagmi';
@@ -16,6 +15,9 @@ import AddItem from '../pages/AddItem';
 import ChooseItem from '../pages/ChooseItem';
 import Collection from '../pages/Collection';
 import ListItem from '../pages/ListItem';
+import MyItems from '../pages/MyItems';
+import ItemDashboard from '../pages/ItemDashboard';
+import MyOfferes from '../pages/MyOffers';
 import Styleguide from '../pages/Styleguide';
 
 import Header from './layout/Header';
@@ -47,6 +49,9 @@ function App() {
                             <Route path="/add-item-from" element={<AddItem />} />
                             <Route path="/add-item-from/:id" element={<ChooseItem />} />
                             <Route path="/list-item" element={<ListItem />} />
+                            <Route path="/my-items" element={<MyItems />} />
+                            <Route path="/my-items/:id" element={<ItemDashboard />} />
+                            <Route path='/my-offers' element={<MyOfferes />} />
                             <Route path="styleguide" element={<Styleguide />} />
                         </Routes>
                     </div>

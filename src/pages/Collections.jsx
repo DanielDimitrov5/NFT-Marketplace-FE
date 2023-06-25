@@ -1,15 +1,9 @@
 import { useState, useEffect } from 'react';
-import marketplaceABI from '../contractData/abi/NFTMarketplace.json';
 import { ethers } from 'ethers';
 import { loadCollections } from '../services/helpers';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEthereum } from "@fortawesome/free-brands-svg-icons"
-
-const marketplaceContract = {
-    address: '0x45feff1D2967352726453a963Ec41003a1523C9c',
-    abi: marketplaceABI,
-}
 
 const Collections = () => {
     const [collections, setCollections] = useState([]);
@@ -22,6 +16,7 @@ const Collections = () => {
             const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
 
             const resolvedCollections = await loadCollections(provider);
+            console.log(resolvedCollections);
 
             setCollections(resolvedCollections);
         } catch (err) {

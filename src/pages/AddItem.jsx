@@ -14,7 +14,7 @@ const AddItem = () => {
 
 
     const marketplaceContract = {
-        address: '0x45feff1D2967352726453a963Ec41003a1523C9c',
+        address: '0x705279FAE070DEe258156940d88A6eCF5B302073',
         abi: marketplaceABI,
     }
 

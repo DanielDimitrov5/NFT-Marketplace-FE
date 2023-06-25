@@ -6,7 +6,7 @@ import { infuraIpfsClient } from "./ipfsClient";
 import nftABI from "../contractData/abi/NFT.json";
 
 const marketplaceContract = {
-    address: '0x45feff1D2967352726453a963Ec41003a1523C9c',
+    address: '0x705279FAE070DEe258156940d88A6eCF5B302073',
     abi: marketplaceABI,
 }
 
@@ -32,7 +32,6 @@ const loadItems = async (provider) => {
             return tokenUri;
         });
 
-
         const URIs = await Promise.all(URIPromises);
 
         const URIsModified = URIs.map((uri) => {
@@ -52,7 +51,8 @@ const loadItems = async (provider) => {
                 image: metadata.data.image.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER),
                 description: metadata.data.description,
                 nft: metadata.data.nft,
-                tokenId: metadata.data.tokenId
+                tokenId: metadata.data.tokenId,
+                owner: items[metadataArr.indexOf(metadata)].owner,
             };
         });
 
@@ -96,6 +96,7 @@ const loadCollections = async (provider) => {
                 contract.provider,
             );
 
+
             return [collectionContract.name(), collectionContract.symbol(), collectionContract.address];
         });
 
@@ -107,57 +108,14 @@ const loadCollections = async (provider) => {
             })
         );
 
+        console.log(resolvedCollections);
+
         return resolvedCollections;
 
     } catch (err) {
         console.log(err);
     }
 }
-
-const loadCollectionItems = async (provider, collectionAddress) => {
-    try {
-        const collectionContract = new ethers.Contract(
-            collectionAddress,
-            erc721ABI,
-            provider,
-        );
-
-        const tokenIds = await getItemsTokenIds(collectionContract);
-
-        const URIPromises = tokenIds.map((tokenId) => {
-            const tokenUri = collectionContract.tokenURI(tokenId);
-            return tokenUri;
-        });
-
-        const URIs = await Promise.all(URIPromises);
-
-        const URIsModified = URIs.map((uri) => {
-            return uri.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER)
-        });
-
-        const metadataPromises = URIsModified.map((uri) => {
-            return axios.get(uri);
-        });
-
-        const metadataArr = await Promise.all(metadataPromises);
-
-        const metadataArrModified = metadataArr.map((metadata) => {
-            return {
-                ...metadata,
-                name: metadata.data.name,
-                image: metadata.data.image.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER),
-                description: metadata.data.description,
-                nft: metadata.data.nft,
-                tokenId: metadata.data.tokenId
-            };
-        });
-
-        return metadataArrModified
-    }
-    catch (err) {
-        console.log(err);
-    }
-};
 
 const loadItemsForAdding = async (provider, collectionAddress, address) => {
     const contract = new ethers.Contract(collectionAddress, erc721ABI, provider);
@@ -308,6 +266,20 @@ const addExistingCollection = async (signer, address) => {
     }
 }
 
+const approveCollection = async (signer, collectionAddress) => {
+    try {
+        const contract = new ethers.Contract(collectionAddress, erc721ABI, signer);
+
+        const transaction = await contract.setApprovalForAll(marketplaceContract.address, true, { gasLimit: 300000 });
+
+        const tx = await transaction.wait();
+
+        return tx.status;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const mintNFT = async (signer, collectionAddress, metadata) => {
 
     const { name, description, image } = metadata;
@@ -319,8 +291,6 @@ const mintNFT = async (signer, collectionAddress, metadata) => {
 
     try {
         const contract = new ethers.Contract(collectionAddress, nftABI, signer);
-
-        const coutn = (await contract.tokenCount()).toNumber();
 
         const metadataURI = await uploadToIPFS(JSON.stringify(metadata));
 
@@ -346,8 +316,113 @@ const uploadToIPFS = async (file) => {
     }
 }
 
+const placeOffer = async (signer, itemId, price) => {
+    try {
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, signer);
+
+        const transaction = await contract.placeOffer(itemId, price);
+
+        const tx = await transaction.wait();
+
+        return tx.status;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getOffers = async (provider, itemId) => {
+    try {
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
+
+        const offerers = await contract.getOfferers(itemId);
+
+        const offerssPromises = offerers.map(async (offerer) => {
+            return contract.offers(itemId, offerer);
+        });
+
+        const offers = await Promise.all(offerssPromises);
+
+        const offersModified = offers.map((offer, i) => {
+            return {
+                offerer: offerers[i],
+                price: offer.price,
+                isAccepted: offer.isAccepted
+            }
+        });
+
+        return offersModified;
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+const acceptOffer = async (signer, itemId, offerer) => {
+    try {
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, signer);
+
+        const transaction = await contract.acceptOffer(itemId, offerer);
+
+        const tx = await transaction.wait();
+
+        return tx.status;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getAccountsOffers = async (provider, address) => {
+    try {
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
+
+        const itemCount = await contract.itemCount();
+
+        const itemCountArr = [...Array(parseInt(itemCount)).keys()].map(i => i + 1);
+
+        const getOffersPromises = itemCountArr.map(async (id) => {
+            const offer = contract.offers(id, address);
+            return offer;
+        });
+
+        const offers = (await Promise.all(getOffersPromises)).filter(offer => offer.itemId.toNumber() !== 0);
+
+        const itemIds = offers.map(offer => offer.itemId.toNumber());
+
+        const itemsPromises = itemIds.map(async (id) => {
+            const item = contract.items(id);
+            return item;
+        });
+
+        const itemsOwners = (await Promise.all(itemsPromises)).map(item => item.owner);
+
+        const offersModified = offers.filter((offer, i) => offer.seller === itemsOwners[i]);
+
+        return offersModified;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+const claimItem = async (signer, itemId, price) => {
+    try {
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, signer);
+
+        const transaction = await contract.claimItem(itemId, { value: price, gasLimit: 300000 });
+
+        const tx = await transaction.wait();
+
+        return tx.status;
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
 export {
-    loadItems, loadCollections, loadCollectionItems /*remove?*/, addItemToMarketplace,
-    getItem, loadItemsForListing, listItemForSale, buyItem, addExistingCollection, mintNFT, loadItemsForAdding
+    loadItems, loadCollections, addItemToMarketplace,
+    getItem, loadItemsForListing, listItemForSale, buyItem,
+    addExistingCollection, mintNFT, loadItemsForAdding, placeOffer,
+    getOffers, acceptOffer, getAccountsOffers, claimItem
 };
 

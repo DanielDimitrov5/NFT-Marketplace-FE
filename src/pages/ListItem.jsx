@@ -46,19 +46,21 @@ const ListItem = () => {
     }
 
     const content = (
-        <div style={{ display: "flex", alignItems: "center" }}>
-            <InputNumber
-                step={0.1}
-                addonBefore="+"
-                addonAfter="ETH"
-                defaultValue={0}
-                min={0}
-                onChange={setInputValue}
-            />
+        <div className="d-flex flex-column">
+            <div className="form-group">
+                <InputNumber
+                    step={0.1}
+                    addonBefore="+"
+                    addonAfter="ETH"
+                    defaultValue={0}
+                    min={0}
+                    onChange={setInputValue}
+                />
+            </div>
             {inputValue > 0 ? (
-                <Button type="primary" onClick={() => list()}>List</Button>
+                <button type="button" className="btn btn-primary" onClick={() => list()}>List</button>
             ) : (
-                <Button type="primary" disabled>List</Button>
+                <button type="button" className="btn btn-primary" disabled>List</button>
             )}
         </div>
     );
