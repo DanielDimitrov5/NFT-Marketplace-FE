@@ -36,7 +36,6 @@ const ItemCards = ({ contractData, isLoadingContractData }) => {
 
             const itemId = itemProperties.itemId;
             const price = ethers.utils.parseEther(inputValue.toString());
-            console.log(itemId, price);
 
             const result = await placeOfferHelper(signer, itemId, price);
 

@@ -6,7 +6,7 @@ import nftABI from "../contractData/abi/NFT.json";
 import nftBytecode from "../contractData/NftBytecode.json";
 
 const CreateCollection = () => {
-    const { isConnected, address } = useAccount();
+    const { isConnected } = useAccount();
 
     const [collectionName, setCollectionName] = useState("");
     const [collectionSymbol, setCollectionSymbol] = useState("");

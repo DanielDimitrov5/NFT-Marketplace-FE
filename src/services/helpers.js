@@ -287,7 +287,7 @@ const approveCollection = async (signer, collectionAddress) => {
 
 const mintNFT = async (signer, collectionAddress, metadata) => {
 
-    const { name, description, image } = metadata;
+    const { image } = metadata;
 
     const imageHash = await uploadToIPFS(image);
 
@@ -364,6 +364,25 @@ const getOffers = async (provider, itemId) => {
 
 const acceptOffer = async (signer, itemId, offerer) => {
     try {
+
+        const item = (await getItem(itemId)).item;
+        const nftContractAddress = item.nftContract;
+        const tokenId = item.tokenId;
+
+        const approve = await checkApproval(signer, nftContractAddress, tokenId);
+
+        if (approve != marketplaceContract.address) {
+            const nftContract = new ethers.Contract(nftContractAddress, erc721ABI, signer);
+            const approveTransaction = await nftContract.approve(marketplaceContract.address, tokenId, { gasLimit: 300000 });
+
+            const aprrovalTx = await approveTransaction.wait();
+
+            if (aprrovalTx.status !== 1) {
+                alert('Approval failed');
+                return;
+            }
+        }
+
         const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, signer);
 
         const transaction = await contract.acceptOffer(itemId, offerer);
@@ -371,6 +390,18 @@ const acceptOffer = async (signer, itemId, offerer) => {
         const tx = await transaction.wait();
 
         return tx.status;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const checkApproval = async (provider, collectionAddress, tokenId) => {
+    try {
+        const contract = new ethers.Contract(collectionAddress, erc721ABI, provider);
+
+        const approved = await contract.getApproved(tokenId);
+
+        return approved;
     } catch (error) {
         console.log(error);
     }

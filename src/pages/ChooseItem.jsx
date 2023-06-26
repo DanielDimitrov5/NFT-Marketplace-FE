@@ -13,7 +13,7 @@ const ChooseItem = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isAdding, setIsAdding] = useState(false);
 
-    const { isConnected, address } = useAccount();
+    const { address } = useAccount();
 
     const getData = async () => {
         setIsLoading(true);

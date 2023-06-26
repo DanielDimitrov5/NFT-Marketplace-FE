@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import { loadItemsForListing, listItemForSale } from "../services/helpers";
-import { Button, Popover, InputNumber } from 'antd';
+import { Popover, InputNumber } from 'antd';
 import Loading from "../components/Loading";
 
 const ListItem = () => {

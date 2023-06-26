@@ -9,7 +9,7 @@ const AddExistingCollection = () => {
     const [isValidAddress, setIsValidAddress] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { isConnected, address } = useAccount();
+    const { isConnected } = useAccount();
 
     const handleAddressChange = (e) => {
         const address = e.target.value;

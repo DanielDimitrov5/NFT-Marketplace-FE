@@ -9,7 +9,7 @@ const MintFrom = () => {
 
     const [collections, setCollections] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const { isConnected, address } = useAccount();
+    const { isConnected } = useAccount();
 
     const handleLoadCollections = async () => {
         setIsLoading(true);

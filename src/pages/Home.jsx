@@ -1,14 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import marketplaceABI from '../contractData/abi/NFTMarketplace.json';
+import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import ItemCards from '../components/ItemCards';
 import { loadItems } from '../services/helpers';
 import { useAccount } from 'wagmi';
-
-const marketplaceContract = {
-    address: '0x283986BAd88488eFa031AD6734926401c5Cfe127',
-    abi: marketplaceABI,
-}
 
 const NETWORK = process.env.REACT_APP_NETWORK;
 const API_KEY = process.env.REACT_APP_API_KEY;
@@ -17,7 +11,7 @@ function Home() {
 
     const [contractData, setContractData] = useState({});
     const [isLoadingContractData, setIsLoadingContractData] = useState(true);
-    const { isConnected, address } = useAccount();
+    const { address } = useAccount();
 
     const getContractData = async () => {
         setIsLoadingContractData(true);
