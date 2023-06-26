@@ -339,7 +339,7 @@ const getOffers = async (provider, itemId) => {
     try {
         const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
 
-        const offerers = await contract.getOfferers(itemId);
+        const offerers = [...new Set(await contract.getOfferers(itemId))];
 
         const offerssPromises = offerers.map(async (offerer) => {
             return contract.offers(itemId, offerer);

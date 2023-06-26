@@ -25,6 +25,7 @@ const MyOfferes = () => {
 
         if (result) {
             alert("Item claimed successfully");
+            setData(data.filter(item => item.itemId != itemId));
         }
 
         setIsClaiming({ ...isClaiming, [itemId]: false });
