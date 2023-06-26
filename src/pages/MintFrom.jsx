@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { loadCollections } from '../services/helpers';
 import { ethers } from 'ethers';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEthereum } from "@fortawesome/free-brands-svg-icons"
+import Loading from '../components/Loading';
 import { Link } from 'react-router-dom';
 import { useAccount } from 'wagmi';
 
@@ -68,9 +67,7 @@ const MintFrom = () => {
 
                             </div>
                         ) : (
-                            <div className="text-center">
-                                <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
-                            </div>
+                            <Loading />
                         )}
                     </div>
                 </div>

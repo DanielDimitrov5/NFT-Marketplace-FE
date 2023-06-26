@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { loadItems } from "../services/helpers";
 import ItemCards from "../components/ItemCards";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEthereum } from "@fortawesome/free-brands-svg-icons"
+import Loading from "../components/Loading";
 import Link from "antd/es/typography/Link";
 
 const Collection = () => {
@@ -37,9 +36,7 @@ const Collection = () => {
             <h1>Collection: {nftContractAddress}</h1>
             <h2>All added items</h2>
             {isLoadingContractData ? (
-                <div className="text-center">
-                    <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
-                </div>
+                <Loading />
             ) : (
                 contractData.items.length === 0 ? <p>We don't have any items from this collection. <Link href={`/add-item-from/${nftContractAddress}`}>Add item</Link> from this collection if you own one.</p>
                     : <ItemCards contractData={contractData} isLoadingContractData={isLoadingContractData} />)

@@ -3,8 +3,7 @@ import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import { loadItemsForListing, listItemForSale } from "../services/helpers";
 import { Button, Popover, InputNumber } from 'antd';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEthereum } from "@fortawesome/free-brands-svg-icons"
+import Loading from "../components/Loading";
 
 const ListItem = () => {
 
@@ -13,6 +12,7 @@ const ListItem = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [inputValue, setInputValue] = useState(0);
     const [itemProperties, setItemProperties] = useState({});
+    const [isListing, setIsListing] = useState({});
 
     const getData = async () => {
         setIsLoading(true);
@@ -29,7 +29,7 @@ const ListItem = () => {
     }
 
     const list = async () => {
-        setIsLoading(true);
+        setIsListing({ [itemProperties.tokenId + itemProperties.nft]: true })
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
 
@@ -41,7 +41,7 @@ const ListItem = () => {
         }
         finally {
             await getData();
-            setIsLoading(false);
+            setIsListing({ [itemProperties.tokenId + itemProperties.nft]: false })
         }
     }
 
@@ -58,7 +58,7 @@ const ListItem = () => {
                 />
             </div>
             {inputValue > 0 ? (
-                <button type="button" className="btn btn-primary" onClick={() => list()}>List</button>
+                <button type="button" className="btn btn-primary" disabled={isListing[itemProperties.tokenId + itemProperties.nft]} onClick={() => list()}>List</button>
             ) : (
                 <button type="button" className="btn btn-primary" disabled>List</button>
             )}
@@ -83,12 +83,10 @@ const ListItem = () => {
                             <br />
                             <h1 className="text-center">List Item</h1>
                             {isLoading ? (
-                                <div className="text-center">
-                                    <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
-                                </div>
+                                <Loading />
                             ) : (
                                 <>
-                                    {items.length === 0 ? (
+                                    {items.filteredItems.length === 0 ? (
                                         <div className="text-center">
                                             <p>No items found</p>
                                         </div>

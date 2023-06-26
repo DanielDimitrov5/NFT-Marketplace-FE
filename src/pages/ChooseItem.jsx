@@ -3,8 +3,7 @@ import { useParams } from "react-router-dom";
 import { addItemToMarketplace, loadItemsForAdding } from "../services/helpers";
 import { ethers } from "ethers";
 import Button from "../components/ui/Button";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEthereum } from "@fortawesome/free-brands-svg-icons"
+import Loading from "../components/Loading";
 import { useAccount } from "wagmi";
 
 const ChooseItem = () => {
@@ -12,6 +11,7 @@ const ChooseItem = () => {
     const { id: nftContractAddress } = useParams()
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isAdding, setIsAdding] = useState(false);
 
     const { isConnected, address } = useAccount();
 
@@ -27,7 +27,8 @@ const ChooseItem = () => {
     }
 
     const add = async (tokenId) => {
-        setIsLoading(true);
+        setIsAdding({ [tokenId]: true });
+
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
 
@@ -38,7 +39,7 @@ const ChooseItem = () => {
             setItems(newItems);
         }
 
-        setIsLoading(false);
+        setIsAdding({ [tokenId]: false });
     }
 
     useEffect(() => {
@@ -50,9 +51,7 @@ const ChooseItem = () => {
             <br />
             <h1>Choose item</h1>
             {isLoading ? (
-                <div className="text-center">
-                    <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
-                </div>
+                <Loading />
             ) : (
                 items.length === 0 ? <p>You don't have any items!</p>
                     : <div>
@@ -61,7 +60,7 @@ const ChooseItem = () => {
                                 <div className="card-body">
                                     <h5 className="card-title">{item.name}</h5>
                                     <p className="card-text">{item.description}</p>
-                                    <Button onClick={() => add(item.tokenId)} className="btn btn-primary">Add</Button>
+                                    <Button onClick={() => add(item.tokenId)} className="btn btn-primary" disabled={isAdding[item.tokenId]}>Add</Button>
                                 </div>
                                 <div className="card-footer">
                                     <small className="text-muted">Token ID: {item.tokenId}</small>

@@ -51,7 +51,7 @@ const loadItems = async (provider) => {
                 image: metadata.data.image.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER),
                 description: metadata.data.description,
                 nft: metadata.data.nft,
-                tokenId: metadata.data.tokenId,
+                tokenId: items[metadataArr.indexOf(metadata)].tokenId,
                 owner: items[metadataArr.indexOf(metadata)].owner,
             };
         });
@@ -201,7 +201,7 @@ const loadItemsForListing = async (provider, address) => {
 
         const nfts = metadataArrModified.filter((item) => {
             return filteredItems.some((item2) => {
-                return item.tokenId === parseInt(item2.tokenId) && item.nft === item2.nftContract;
+                return parseInt(item.tokenId) === parseInt(item2.tokenId) && item.nft === item2.nftContract;
             });
         });
 
@@ -218,21 +218,26 @@ const listItemForSale = async (provider, collectionAddress, tokenId, price) => {
     }
 
     try {
-        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
-
-        const items = await loadItems(provider);
-
-        const itemId = parseInt(items.items.filter(item => item.nftContract === collectionAddress && parseInt(item.tokenId) === tokenId)[0].id);
-
-        const transaction = await contract.listItem(itemId, price, { gasLimit: 300000 });
-
         const nftContract = new ethers.Contract(collectionAddress, erc721ABI, provider);
         const approveTransaction = await nftContract.approve(marketplaceContract.address, tokenId, { gasLimit: 300000 });
+        const aprrovalTx = await approveTransaction.wait();
 
-        const tx = await transaction.wait();
-        await approveTransaction.wait();
+        if (aprrovalTx.status === 1) {
+            const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
 
-        return tx.transaction.status;
+            const items = await loadItems(provider);
+
+            const itemId = parseInt(items.items.filter(item => item.nftContract === collectionAddress && parseInt(item.tokenId) === parseInt(tokenId))[0].id);
+
+            const transaction = await contract.listItem(itemId, price, { gasLimit: 300000 });
+
+            const tx = await transaction.wait();
+
+            return tx.transaction.status;
+        }
+        else {
+            alert('Approval failed');
+        }
     } catch (error) {
         console.log(error);
     }

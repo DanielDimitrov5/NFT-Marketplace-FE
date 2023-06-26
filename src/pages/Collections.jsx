@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { loadCollections } from '../services/helpers';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEthereum } from "@fortawesome/free-brands-svg-icons"
+import Loading from '../components/Loading';
 
 const Collections = () => {
     const [collections, setCollections] = useState([]);
@@ -40,9 +39,7 @@ const Collections = () => {
             </div>
             <div className="row">
                 {isLoading ? (
-                    <div className="text-center">
-                        <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
-                    </div>
+                    <Loading />
                 ) : (
                     collections.map((collection, index) => (
                         <div className="col-12 col-md-6 col-lg-4" key={index}>

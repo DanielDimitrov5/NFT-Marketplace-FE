@@ -4,9 +4,7 @@ import { ethers } from "ethers"
 import { Link } from "react-router-dom"
 import { getItem } from "../services/helpers"
 import { Image } from 'antd';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEthereum } from "@fortawesome/free-brands-svg-icons";
+import Loading from "../components/Loading"
 
 const Item = () => {
     const [data, setData] = useState()
@@ -43,10 +41,7 @@ const Item = () => {
                         }
                     </div>
                 </div> : (
-                    <div className="text-center">
-                        <br />
-                        <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
-                    </div>
+                    <Loading />
                 )
             }
         </div >

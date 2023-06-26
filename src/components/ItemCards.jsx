@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEthereum } from "@fortawesome/free-brands-svg-icons"
+import Loading from './Loading';
 import { buyItem, placeOffer as placeOfferHelper } from '../services/helpers';
 import { Popover, InputNumber } from 'antd';
 import { Link } from 'react-router-dom';
@@ -86,9 +85,7 @@ const ItemCards = ({ contractData, isLoadingContractData }) => {
     return (
         <div className="container my-5">
             {isLoadingContractData ? (
-                <div className="text-center">
-                    <FontAwesomeIcon icon={faEthereum} spin size="2xl" />
-                </div>
+                <Loading />
             ) : (
                 <div className="row">
                     {contractData.items.map((item, i) => (
