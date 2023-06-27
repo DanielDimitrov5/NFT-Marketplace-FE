@@ -1,21 +1,15 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
-import marketplaceABI from "../contractData/abi/NFTMarketplace.json";
+
 import { loadCollections } from "../services/helpers";
 import Loading from "../components/Loading";
 import { Link } from "react-router-dom";
 
 const AddItem = () => {
-    const { isConnected, address } = useAccount();
+    const { isConnected } = useAccount();
     const [collectionData, setCollectionData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
-
-    const marketplaceContract = {
-        address: '0x705279FAE070DEe258156940d88A6eCF5B302073',
-        abi: marketplaceABI,
-    }
 
     const loadCollectionData = async () => {
         setIsLoading(true);

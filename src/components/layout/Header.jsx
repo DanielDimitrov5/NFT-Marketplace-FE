@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useConnect, useAccount, useBalance } from 'wagmi';
+import { useConnect, useAccount, useBalance, useDisconnect } from 'wagmi';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { sepolia } from 'wagmi/chains';
 
@@ -28,12 +28,22 @@ function Header() {
         address,
     });
 
+    const { disconnect } = useDisconnect();
+
     const handleConnectButtonClick = async () => {
         await connect();
     };
 
+    const handleDisconnectButtonClick = async () => {
+        await disconnect();
+    };
+
     const handleSelect = (e) => {
         setCurrentSelection(e.target.text)
+    }
+
+    const handleWithdraw = async () => {
+        alert("Not implemented yet");
     }
 
     return (
@@ -78,6 +88,11 @@ function Header() {
                                         <span className="fw-bold">Balance: </span>
                                         <span>{Number(data && data.formatted).toFixed(3)} ETH</span>
                                     </p>
+                                    <span className="mx-3">|</span>
+                                    <NavDropdown title="Account" id="basic-nav-dropdown">
+                                        <NavDropdown.Item onClick={handleDisconnectButtonClick}>Disconnect</NavDropdown.Item>
+                                        <NavDropdown.Item onClick={handleWithdraw}>Withdraw money</NavDropdown.Item>
+                                    </NavDropdown>
                                 </div>
                             </>
                         ) : (

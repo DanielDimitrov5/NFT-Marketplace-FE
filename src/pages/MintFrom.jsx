@@ -16,6 +16,7 @@ const MintFrom = () => {
         const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
 
         const collections = await loadCollections(provider);
+        console.log(collections);
 
         setCollections(collections);
         setIsLoading(false);

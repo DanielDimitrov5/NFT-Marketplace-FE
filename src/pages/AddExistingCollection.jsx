@@ -73,15 +73,14 @@ const AddExistingCollection = () => {
                                             )}
                                         </div>
                                         <div className="text-center">
-                                            {isValidAddress ? (
-                                                <button type="submit" className="btn btn-primary">
-                                                    Add
-                                                </button>
-                                            ) : (
-                                                <button type="submit" className="btn btn-primary" disabled>
-                                                    Add
-                                                </button>
-                                            )}
+                                            <button
+                                                type="submit"
+                                                className="btn btn-primary"
+                                                disabled={!isValidAddress}
+                                            >
+                                                Add
+                                            </button>
+
                                         </div>
                                     </form>
                                 ) : (

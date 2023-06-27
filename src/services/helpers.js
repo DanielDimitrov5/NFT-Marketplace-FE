@@ -325,7 +325,7 @@ const placeOffer = async (signer, itemId, price) => {
     try {
         const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, signer);
 
-        const transaction = await contract.placeOffer(itemId, price);
+        const transaction = await contract.placeOffer(itemId, price, { gasLimit: 300000 });
 
         const tx = await transaction.wait();
 
@@ -385,7 +385,7 @@ const acceptOffer = async (signer, itemId, offerer) => {
 
         const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, signer);
 
-        const transaction = await contract.acceptOffer(itemId, offerer);
+        const transaction = await contract.acceptOffer(itemId, offerer, { gasLimit: 300000 });
 
         const tx = await transaction.wait();
 

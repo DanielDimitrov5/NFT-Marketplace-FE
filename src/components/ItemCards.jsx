@@ -4,6 +4,7 @@ import Loading from './Loading';
 import { buyItem, placeOffer as placeOfferHelper } from '../services/helpers';
 import { Popover, InputNumber } from 'antd';
 import { Link } from 'react-router-dom';
+import { useAccount } from 'wagmi';
 
 const ItemCards = ({ contractData, isLoadingContractData }) => {
 
@@ -11,6 +12,8 @@ const ItemCards = ({ contractData, isLoadingContractData }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [inputValue, setInputValue] = useState(0);
     const [itemProperties, setItemProperties] = useState({});
+
+    const { isConnected } = useAccount();
 
     const buyItemById = async (id, price) => {
         setIsLoading(true);
@@ -46,10 +49,12 @@ const ItemCards = ({ contractData, isLoadingContractData }) => {
         else {
             alert('Please connect your wallet');
         }
+
+        setIsLoading(false);
     }
 
     useEffect(() => {
-        if (contractData) {
+        if (contractData && isConnected) {
             try {
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
@@ -59,7 +64,7 @@ const ItemCards = ({ contractData, isLoadingContractData }) => {
                 console.log(err);
             }
         }
-    }, [contractData]);
+    }, [contractData, isConnected]);
 
     const content = (
         <div className="d-flex flex-column">
