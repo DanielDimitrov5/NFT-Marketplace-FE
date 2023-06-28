@@ -4,6 +4,7 @@ import marketplaceABI from '../contractData/abi/NFTMarketplace.json';
 import { ethers } from "ethers";
 import { infuraIpfsClient } from "./ipfsClient";
 import nftABI from "../contractData/abi/NFT.json";
+import nftBytecode from "../contractData/NftBytecode.json";
 
 const marketplaceContract = {
     address: '0x705279FAE070DEe258156940d88A6eCF5B302073',
@@ -504,11 +505,25 @@ const getMarketplaceBalance = async (provider) => {
     }
 }
 
+const deployNFTCollection = async (signer, name, symbol) => {
+    try {
+        const factory = new ethers.ContractFactory(nftABI, nftBytecode.bytecode, signer);
+
+        const contract = await factory.deploy(name, symbol);
+
+        await contract.deployed();
+
+        return contract;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export {
     loadItems, loadCollections, addItemToMarketplace,
     getItem, loadItemsForListing, listItemForSale, buyItem,
     addExistingCollection, mintNFT, loadItemsForAdding, placeOffer,
     getOffers, acceptOffer, getAccountsOffers, getOffer, claimItem,
-    isMarketpkaceOwner, withdrawMoney, getMarketplaceBalance
+    isMarketpkaceOwner, withdrawMoney, getMarketplaceBalance, deployNFTCollection
 };
 

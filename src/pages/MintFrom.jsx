@@ -5,26 +5,43 @@ import Loading from '../components/Loading';
 import { Link } from 'react-router-dom';
 import { useAccount } from 'wagmi';
 
+import nftABI from '../contractData/abi/NFT.json';
+
 const MintFrom = () => {
 
     const [collections, setCollections] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const { isConnected } = useAccount();
+    const { isConnected, address } = useAccount();
 
     const handleLoadCollections = async () => {
         setIsLoading(true);
-        const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
+        const provider = new ethers.providers.InfuraProvider(
+            process.env.REACT_APP_NETWORK,
+            process.env.REACT_APP_API_KEY
+        );
 
         const collections = await loadCollections(provider);
-        console.log(collections);
 
-        setCollections(collections);
+        const ownersPromises = collections.map((collection) => {
+            const contract = new ethers.Contract(collection.address, nftABI, provider);
+            const owner = contract.owner();
+            return owner;
+        });
+
+        const owners = await Promise.all(ownersPromises);
+
+        const filteredCollections = collections.filter((collection, index) => {
+            return owners[index] === address;
+        });
+
+        setCollections(filteredCollections);
         setIsLoading(false);
-    }
+    };
+
 
     useEffect(() => {
         handleLoadCollections();
-    }, []);
+    }, [address]);
 
     return (
         <div className="container">

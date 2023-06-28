@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useAccount } from "wagmi";
 import { ethers, ContractFactory } from "ethers";
 import marketplaceABI from "../contractData/abi/NFTMarketplace.json";
-import nftABI from "../contractData/abi/NFT.json";
-import nftBytecode from "../contractData/NftBytecode.json";
+import { deployNFTCollection as deploy, addExistingCollection } from "../services/helpers";
 
 const CreateCollection = () => {
     const { isConnected } = useAccount();
@@ -13,24 +12,19 @@ const CreateCollection = () => {
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const marketplaceContract = {
-        address: '0x705279FAE070DEe258156940d88A6eCF5B302073',
-        abi: marketplaceABI,
-    }
-
     const deployNFTCollection = async () => {
         setIsLoading(true);
 
         try {
+
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
-            const factory = new ContractFactory(nftABI, nftBytecode.bytecode, signer);
-            const contract = await factory.deploy(collectionName, collectionSymbol);
-            await contract.deployed();
 
-            const marketplace = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, signer);
-            const tx = await marketplace.addCollection(contract.address);
-            await tx.wait();
+            const nft = await deploy(signer, collectionName, collectionSymbol);
+
+            await addExistingCollection(signer, nft.address);
+
+            alert("Collection created successfully");
         } catch (error) {
             console.error(error);
         }
@@ -73,7 +67,10 @@ const CreateCollection = () => {
                                     <input className="form-control" id="collectionDescription" rows="3" value={collectionSymbol} onChange={handleCollectionSymbolChange}></input>
                                 </div>
                                 {isLoading ? (
-                                    <button type="submit" className="btn btn-primary" disabled>Create</button>) : (
+                                    <div className="spinner-border text-primary" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </div>
+                                ) : (
                                     <button type="submit" className="btn btn-primary">Create</button>
                                 )}
                             </form>
