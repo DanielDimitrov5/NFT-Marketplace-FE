@@ -440,6 +440,19 @@ const getAccountsOffers = async (provider, address) => {
     }
 }
 
+const getOffer = async (provider, itemId, offerer) => {
+    try {
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
+
+        const offer = await contract.offers(itemId, offerer);
+        return offer;
+    }
+    catch (error) {
+        console.log(error);
+    }
+
+}
+
 const claimItem = async (signer, itemId, price) => {
     try {
         const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, signer);
@@ -495,7 +508,7 @@ export {
     loadItems, loadCollections, addItemToMarketplace,
     getItem, loadItemsForListing, listItemForSale, buyItem,
     addExistingCollection, mintNFT, loadItemsForAdding, placeOffer,
-    getOffers, acceptOffer, getAccountsOffers, claimItem, isMarketpkaceOwner,
-    withdrawMoney, getMarketplaceBalance
+    getOffers, acceptOffer, getAccountsOffers, getOffer, claimItem,
+    isMarketpkaceOwner, withdrawMoney, getMarketplaceBalance
 };
 
