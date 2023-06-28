@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useConnect, useAccount, useBalance, useDisconnect } from 'wagmi';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { sepolia } from 'wagmi/chains';
@@ -9,11 +9,15 @@ import Button from '../ui/Button';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
+import { withdrawMoney, isMarketpkaceOwner, getMarketplaceBalance } from '../../services/helpers';
+import { ethers } from 'ethers';
 
 const md5 = require('md5');
 
 function Header() {
     const [currentSelection, setCurrentSelection] = useState('Home')
+    const [isOwner, setIsOwner] = useState(false)
+    const [marketplaceBalance, setMarketplaceBalance] = useState(0)
 
     const connector = new MetaMaskConnector({
         chains: [sepolia],
@@ -43,8 +47,36 @@ function Header() {
     }
 
     const handleWithdraw = async () => {
-        alert("Not implemented yet");
+        if (isConnected) {
+            const signer = new ethers.providers.Web3Provider(window.ethereum).getSigner();
+            const result = await withdrawMoney(signer);
+            if (result === 1) {
+                alert('Withdraw successful!');
+            }
+        }
     }
+
+    const checkOwner = async () => {
+        if (isConnected) {
+            const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
+            const result = await isMarketpkaceOwner(provider, address);
+            setIsOwner(result);
+        }
+    }
+
+    const getBalance = async () => {
+        if (isConnected) {
+            const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
+            const result = await getMarketplaceBalance(provider);
+            console.log(result);
+            setMarketplaceBalance(result);
+        }
+    }
+
+    useEffect(() => {
+        checkOwner();
+        getBalance();
+    }, [isConnected, address])
 
     return (
         <div className="header-wrapper">
@@ -73,7 +105,7 @@ function Header() {
                     </Nav>
                     <div className="d-flex">
                         {isLoading ? (
-                            <span>Loading...</span>
+                            <span>Connecting...</span>
                         ) : isConnected ? (
                             <>
                                 <div className="d-flex align-items-center justify-content-end">
@@ -91,7 +123,7 @@ function Header() {
                                     <span className="mx-3">|</span>
                                     <NavDropdown title="Account" id="basic-nav-dropdown">
                                         <NavDropdown.Item onClick={handleDisconnectButtonClick}>Disconnect</NavDropdown.Item>
-                                        <NavDropdown.Item onClick={handleWithdraw}>Withdraw money</NavDropdown.Item>
+                                        {isOwner && <NavDropdown.Item onClick={handleWithdraw}>Withdraw money</NavDropdown.Item>}
                                     </NavDropdown>
                                 </div>
                             </>

@@ -455,10 +455,47 @@ const claimItem = async (signer, itemId, price) => {
 
 }
 
+const isMarketpkaceOwner = async (provider, address) => {
+    try {
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
+
+        const owner = await contract.owner();
+
+        return owner === address;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const withdrawMoney = async (signer) => {
+    try {
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, signer);
+
+        const transaction = await contract.withdraw({ gasLimit: 300000 });
+
+        const tx = await transaction.wait();
+
+        return tx.status;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getMarketplaceBalance = async (provider) => {
+    try {
+        const balance = await provider.getBalance(marketplaceContract.address);
+
+        return balance;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export {
     loadItems, loadCollections, addItemToMarketplace,
     getItem, loadItemsForListing, listItemForSale, buyItem,
     addExistingCollection, mintNFT, loadItemsForAdding, placeOffer,
-    getOffers, acceptOffer, getAccountsOffers, claimItem
+    getOffers, acceptOffer, getAccountsOffers, claimItem, isMarketpkaceOwner,
+    withdrawMoney, getMarketplaceBalance
 };
 
