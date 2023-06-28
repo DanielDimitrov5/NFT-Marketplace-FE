@@ -9,7 +9,7 @@ const MintFrom = () => {
 
     const { id } = useParams();
     const { isConnected, address } = useAccount();
-    const [isOwner, setIsOwner] = useState(false);
+    const [isOwner, setIsOwner] = useState(true);
     const [isMinting, setIsMinting] = useState(false);
 
     const [name, setName] = useState('');
