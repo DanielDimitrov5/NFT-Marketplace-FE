@@ -7,6 +7,7 @@ import { Image } from 'antd';
 import Loading from "../components/Loading"
 import { useAccount } from "wagmi"
 import { InputNumber, Popover } from "antd"
+import { successMessage, errorMessage } from "../services/alertMessages"
 
 const Item = () => {
     const [data, setData] = useState()
@@ -36,12 +37,12 @@ const Item = () => {
             const result = await buyItem(signer, data.item.id, data.item.price);
 
             if (result === 1) {
-                alert('Transaction successful!');
+                successMessage('Item bought successfully!');
                 getData();
             }
         }
         else {
-            alert('Please connect your wallet');
+            errorMessage('Please connect your wallet');
         }
 
         setIsInteracting(false);
@@ -60,12 +61,12 @@ const Item = () => {
             const result = await placeOfferHelper(signer, data?.item?.id, price);
 
             if (result === 1) {
-                alert('Offer placed successfully!');
+                successMessage('Offer placed successfully!');
                 setOffer({ itemId: data?.item.id, price, isAccepted: false });
             }
         }
         else {
-            alert('Please connect your wallet');
+            errorMessage('Please connect your wallet');
         }
 
         setIsInteracting(false);

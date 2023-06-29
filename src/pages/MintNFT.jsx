@@ -4,9 +4,9 @@ import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import { mintNFT } from "../services/helpers";
 import nftABI from "../contractData/abi/NFT.json";
+import { successMessage, errorMessage } from "../services/alertMessages";
 
 const MintFrom = () => {
-
     const { id } = useParams();
     const { isConnected, address } = useAccount();
     const [isOwner, setIsOwner] = useState(true);
@@ -31,6 +31,7 @@ const MintFrom = () => {
         } else {
             alert("Please select a valid image file.");
             setImage("");
+            document.getElementById('image').value = '';
         }
     }
 
@@ -56,10 +57,11 @@ const MintFrom = () => {
             const result = await mintNFT(signer, id, data);
 
             if (result === 1) {
-                alert('NFT minted successfully!');
+                successMessage('NFT minted successfully!');
             }
         }
         catch (error) {
+            errorMessage('Something went wrong!');
             console.log(error);
         }
         finally {
@@ -86,6 +88,7 @@ const MintFrom = () => {
                 setIsOwner(false);
             }
         } catch (error) {
+            errorMessage('Something went wrong!');
             setIsOwner(false);
         }
     }

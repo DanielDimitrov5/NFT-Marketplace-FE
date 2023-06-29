@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import Button from "../components/ui/Button";
 import Loading from "../components/Loading";
 import { useAccount } from "wagmi";
+import { successMessage } from "../services/alertMessages";
 
 const ChooseItem = () => {
 
@@ -36,8 +37,8 @@ const ChooseItem = () => {
 
         if (status === 1) {
             const newItems = items.filter(item => item.tokenId !== tokenId);
-            alert("Item added to marketplace!");
             setItems(newItems);
+            successMessage("Item added to marketplace successfully!");
         }
 
         setIsAdding({ [tokenId]: false });

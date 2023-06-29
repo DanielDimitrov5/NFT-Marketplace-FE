@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { buyItem, placeOffer as placeOfferHelper, getOffer } from "../services/helpers";
 import { Popover, InputNumber } from 'antd';
 import { useAccount } from "wagmi";
+import { successMessage, errorMessage } from "../services/alertMessages";
 
 const ItemCard = ({ contractData, item, i }) => {
 
@@ -23,13 +24,13 @@ const ItemCard = ({ contractData, item, i }) => {
             const result = await buyItem(signer, item.id, item.price);
 
             if (result === 1) {
-                alert('Transaction successful!');
+                successMessage('Item bought successfully!');
 
                 setIsVisable(false);
             }
         }
         else {
-            alert('Please connect your wallet');
+            errorMessage('Please connect your wallet');
         }
 
         setIsLoading(false);
@@ -45,12 +46,12 @@ const ItemCard = ({ contractData, item, i }) => {
             const result = await placeOfferHelper(signer, item.id, price);
 
             if (result === 1) {
-                alert('Offer placed successfully!');
+                successMessage('Offer placed successfully!');
                 setOffer({ itemId: item.id, price, isAccepted: false });
             }
         }
         else {
-            alert('Please connect your wallet');
+            errorMessage('Please connect your wallet');
         }
 
         setIsLoading(false);
@@ -96,6 +97,7 @@ const ItemCard = ({ contractData, item, i }) => {
                 getOfferById();
             }
             catch (err) {
+                errorMessage('Something went wrong!')
                 console.log(err);
             }
         }

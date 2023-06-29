@@ -6,6 +6,7 @@ import { useAccount } from "wagmi";
 import { Link } from "react-router-dom";
 import { Image } from 'antd';
 import Loading from "../components/Loading";
+import { successMessage, errorMessage } from "../services/alertMessages";
 
 const ItemDashboard = () => {
     const { address } = useAccount();
@@ -51,12 +52,12 @@ const ItemDashboard = () => {
             const result = await accept(signer, id, offererAddress);
 
             if (result === 1) {
-                alert('Offer accepted successfully!');
+                successMessage('Offer accepted successfully!');
             }
 
         } catch (error) {
             console.log(error);
-            alert('Something went wrong!');
+            errorMessage('Something went wrong!');
         }
         finally {
             setIsAccepting(prevState => ({
@@ -77,13 +78,13 @@ const ItemDashboard = () => {
             const result = await approveToken(signer, data.item.nftContract, data.item.tokenId);
 
             if (result === 1) {
-                alert('Token approved successfully!');
+                successMessage('Token approved successfully!');
                 setIsApproved(true);
             }
 
         } catch (error) {
             console.log(error);
-            alert('Something went wrong!');
+            errorMessage('Something went wrong!');
         }
         finally {
             setIsApproving(false);

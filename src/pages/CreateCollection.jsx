@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAccount } from "wagmi";
-import { ethers, ContractFactory } from "ethers";
-import marketplaceABI from "../contractData/abi/NFTMarketplace.json";
+import { ethers } from "ethers";
 import { deployNFTCollection as deploy, addExistingCollection } from "../services/helpers";
+import { successMessage, errorMessage } from "../services/alertMessages";
 
 const CreateCollection = () => {
     const { isConnected } = useAccount();
@@ -24,8 +24,9 @@ const CreateCollection = () => {
 
             await addExistingCollection(signer, nft.address);
 
-            alert("Collection created successfully");
+            successMessage("Collection created successfully!");
         } catch (error) {
+            errorMessage("Something went wrong!");
             console.error(error);
         }
         finally {

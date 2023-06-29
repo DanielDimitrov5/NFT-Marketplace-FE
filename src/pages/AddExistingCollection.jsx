@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { isAddress } from "ethers/lib/utils.js";
 import { addExistingCollection } from "../services/helpers";
 import { useAccount } from "wagmi";
+import { successMessage } from "../services/alertMessages";
 
 const AddExistingCollection = () => {
     const [collectionAddress, setCollectionAddress] = useState("");
@@ -29,7 +30,7 @@ const AddExistingCollection = () => {
             const result = await addExistingCollection(signer, collectionAddress);
 
             if (result === 1) {
-                alert("Successfully added collection");
+                successMessage("successfully! added collection");
             }
 
             setIsSubmitting(false);

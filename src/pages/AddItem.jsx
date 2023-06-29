@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import { loadCollections } from "../services/helpers";
 import Loading from "../components/Loading";
 import CollectionCard from "../components/CollectionCard";
+import { errorMessage } from "../services/alertMessages";
 
 const AddItem = () => {
     const { isConnected } = useAccount();
@@ -23,6 +24,7 @@ const AddItem = () => {
 
         }
         catch (error) {
+            errorMessage('Something went wrong!');
             console.error(error);
         }
         finally {

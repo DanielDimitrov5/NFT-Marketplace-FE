@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import { loadCollections } from '../services/helpers';
 import Loading from '../components/Loading';
 import CollectionCard from '../components/CollectionCard';
+import { errorMessage } from '../services/alertMessages';
 
 const Collections = () => {
     const [collections, setCollections] = useState([]);
@@ -18,6 +19,7 @@ const Collections = () => {
 
             setCollections(resolvedCollections);
         } catch (err) {
+            errorMessage('Something went wrong!');
             console.log(err);
         } finally {
             setIsLoading(false);

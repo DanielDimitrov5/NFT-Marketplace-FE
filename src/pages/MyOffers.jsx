@@ -3,6 +3,7 @@ import { useAccount } from "wagmi";
 import { getAccountsOffers, claimItem } from "../services/helpers";
 import { ethers } from "ethers";
 import { Link } from "react-router-dom";
+import { successMessage, errorMessage } from "../services/alertMessages";
 
 const MyOfferes = () => {
     const { address } = useAccount();
@@ -27,8 +28,11 @@ const MyOfferes = () => {
         const result = await claimItem(signer, itemId, price);
 
         if (result) {
-            alert("Item claimed successfully");
+            successMessage("Item claimed successfully!");
             setData(data.filter(item => item.itemId != itemId));
+        }
+        else {
+            errorMessage("Something went wrong!");
         }
 
         setIsClaiming({ ...isClaiming, [itemId]: false });

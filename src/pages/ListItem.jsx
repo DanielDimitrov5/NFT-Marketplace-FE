@@ -4,6 +4,7 @@ import { useAccount } from "wagmi";
 import { loadItemsForListing, listItemForSale } from "../services/helpers";
 import { Popover, InputNumber } from 'antd';
 import Loading from "../components/Loading";
+import { successMessage, errorMessage } from "../services/alertMessages";
 
 const ListItem = () => {
 
@@ -38,9 +39,10 @@ const ListItem = () => {
 
             if (result === 1) {
                 setItems({ filteredItems: items.filteredItems.filter(item => item.tokenId !== itemProperties.tokenId), nfts: items.nfts.filter(nft => nft.tokenId !== itemProperties.tokenId) });
-                alert('Item listed successfully!');
+                successMessage('Item listed successfully!');
             }
         } catch (error) {
+            errorMessage('Something went wrong!');
             console.log(error);
         }
         finally {

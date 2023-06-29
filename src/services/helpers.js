@@ -11,6 +11,8 @@ const marketplaceContract = {
     abi: marketplaceABI,
 }
 
+const defaultImageHash = 'QmcZcBrDxzXogmpGoh1jU3AjSjGTqHVoM4pNtejAEeMc5J';
+
 const loadItems = async (provider) => {
     try {
         const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
@@ -285,7 +287,11 @@ const mintNFT = async (signer, collectionAddress, metadata) => {
 
     const { image } = metadata;
 
-    const imageHash = await uploadToIPFS(image);
+    let imageHash = 'ipfs://' + defaultImageHash;
+
+    if (image) {
+        imageHash = await uploadToIPFS(image);
+    }
 
     metadata.image = imageHash;
     metadata.nft = collectionAddress;
