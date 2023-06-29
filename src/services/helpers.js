@@ -217,13 +217,10 @@ const listItemForSale = async (provider, collectionAddress, tokenId, price) => {
     }
 
     try {
-        const nftContract = new ethers.Contract(collectionAddress, erc721ABI, provider);
-
         const isApproved = await checkApproval(provider, collectionAddress, tokenId);
 
         if (isApproved !== marketplaceContract.address) {
-            const approveTransaction = await nftContract.approve(marketplaceContract.address, tokenId, { gasLimit: 300000 });
-            await approveTransaction.wait();
+            await approveToken(provider, collectionAddress, tokenId);
         }
 
         const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
@@ -372,12 +369,9 @@ const acceptOffer = async (signer, itemId, offerer) => {
         const approve = await checkApproval(signer, nftContractAddress, tokenId);
 
         if (approve != marketplaceContract.address) {
-            const nftContract = new ethers.Contract(nftContractAddress, erc721ABI, signer);
-            const approveTransaction = await nftContract.approve(marketplaceContract.address, tokenId, { gasLimit: 300000 });
+            const aprrovalTx = await approveToken(signer, nftContractAddress, tokenId);
 
-            const aprrovalTx = await approveTransaction.wait();
-
-            if (aprrovalTx.status !== 1) {
+            if (aprrovalTx !== 1) {
                 alert('Approval failed');
                 return;
             }
@@ -429,9 +423,11 @@ const getAccountsOffers = async (provider, address) => {
             return item;
         });
 
-        const itemsOwners = (await Promise.all(itemsPromises)).map(item => item.owner);
+        const items = (await Promise.all(itemsPromises));
 
-        const offersModified = offers.filter((offer, i) => offer.seller === itemsOwners[i]);
+        const itemsOwners = items.map(item => item.owner);
+
+        const offersModified = offers.filter((offer, i) => offer.seller === itemsOwners[i] && items[i].price.toNumber() === 0);
 
         return offersModified;
     }
@@ -518,11 +514,26 @@ const deployNFTCollection = async (signer, name, symbol) => {
     }
 }
 
+const approveToken = async (signer, collectionAddress, tokenId) => {
+    try {
+        const contract = new ethers.Contract(collectionAddress, erc721ABI, signer);
+
+        const transaction = await contract.approve(marketplaceContract.address, tokenId, { gasLimit: 300000 });
+
+        const tx = await transaction.wait();
+
+        return tx.status;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export {
     loadItems, loadCollections, addItemToMarketplace,
     getItem, loadItemsForListing, listItemForSale, buyItem,
     addExistingCollection, mintNFT, loadItemsForAdding, placeOffer,
     getOffers, acceptOffer, getAccountsOffers, getOffer, claimItem,
-    isMarketpkaceOwner, withdrawMoney, getMarketplaceBalance, deployNFTCollection
+    isMarketpkaceOwner, withdrawMoney, getMarketplaceBalance, deployNFTCollection,
+    approveToken, checkApproval, marketplaceContract
 };
 
