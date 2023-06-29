@@ -2,24 +2,33 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getItem, getOffers, acceptOffer as accept } from "../services/helpers";
 import { ethers } from "ethers";
+import { useAccount } from "wagmi";
 import { Link } from "react-router-dom";
 import { Image } from 'antd';
+import Loading from "../components/Loading";
 
 const ItemDashboard = () => {
+    const { address } = useAccount();
 
     const { id } = useParams();
     const [data, setData] = useState();
     const [offers, setOffers] = useState();
     const [isAccepting, setIsAccepting] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
+
 
     const getData = async () => {
+        setIsLoading(true);
+
         const result = await getItem(id);
 
         const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
-        const offers = await getOffers(provider, id);
+        const offers = (await getOffers(provider, id)).filter(offer => offer.seller === address);
 
         setData(result);
         setOffers(offers);
+
+        setIsLoading(false);
     }
 
     const acceptOffer = async (offererAddress) => {
@@ -55,10 +64,22 @@ const ItemDashboard = () => {
         getData();
     }, []);
 
+    if (data?.item?.owner !== address && !isLoading) {
+        return (
+            <>
+                <br />
+                <h1>You are not the owner of this item!</h1>
+                <Link to="/my-items">Back to your items</Link>
+            </>
+
+        )
+    }
+
     return (
         <div className="container">
+            <br />
             <div className="row">
-                {data && (
+                {data && !isLoading ? (
                     <>
                         <div className="col-12 col-md-6">
                             <Image.PreviewGroup>
@@ -93,7 +114,14 @@ const ItemDashboard = () => {
                                                 <td>{ethers.utils.formatEther(offer.price.toString())} ETH</td>
                                                 <td>{offer.isAccepted ? 'Accepted' : 'Pending'}</td>
                                                 <td>
-                                                    <button onClick={() => acceptOffer(offer.offerer)} className="btn btn-primary" disabled={offer.isAccepted || isAccepting[offer.offerer]}>Accept</button>
+                                                    {isAccepting[offer.offerer] ? (
+                                                        <div className="spinner-border text-primary" role="status">
+                                                            <span className="visually-hidden">Loading...</span>
+                                                        </div>
+                                                    ) : (
+
+                                                        <button onClick={() => acceptOffer(offer.offerer)} className="btn btn-primary" disabled={offer.isAccepted}>Accept</button>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))}
@@ -101,6 +129,8 @@ const ItemDashboard = () => {
                                 </table>
                             </div>)}
                     </>
+                ) : (
+                    <Loading />
                 )}
             </div>
         </div>

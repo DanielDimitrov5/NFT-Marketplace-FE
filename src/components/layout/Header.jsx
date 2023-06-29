@@ -68,7 +68,7 @@ function Header() {
         if (isConnected) {
             const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
             const result = await getMarketplaceBalance(provider);
-            console.log(result);
+
             setMarketplaceBalance(result);
         }
     }

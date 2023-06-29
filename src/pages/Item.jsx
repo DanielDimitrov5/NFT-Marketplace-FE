@@ -23,6 +23,7 @@ const Item = () => {
 
     return (
         <div className="container">
+            <br />
             {data ?
                 <div className="row">
                     <div className="col-12 col-md-6">

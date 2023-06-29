@@ -109,8 +109,6 @@ const loadCollections = async (provider) => {
             })
         );
 
-        console.log(resolvedCollections);
-
         return resolvedCollections;
 
     } catch (err) {
@@ -220,25 +218,25 @@ const listItemForSale = async (provider, collectionAddress, tokenId, price) => {
 
     try {
         const nftContract = new ethers.Contract(collectionAddress, erc721ABI, provider);
-        const approveTransaction = await nftContract.approve(marketplaceContract.address, tokenId, { gasLimit: 300000 });
-        const aprrovalTx = await approveTransaction.wait();
 
-        if (aprrovalTx.status === 1) {
-            const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
+        const isApproved = await checkApproval(provider, collectionAddress, tokenId);
 
-            const items = await loadItems(provider);
-
-            const itemId = parseInt(items.items.filter(item => item.nftContract === collectionAddress && parseInt(item.tokenId) === parseInt(tokenId))[0].id);
-
-            const transaction = await contract.listItem(itemId, price, { gasLimit: 300000 });
-
-            const tx = await transaction.wait();
-
-            return tx.transaction.status;
+        if (isApproved !== marketplaceContract.address) {
+            const approveTransaction = await nftContract.approve(marketplaceContract.address, tokenId, { gasLimit: 300000 });
+            await approveTransaction.wait();
         }
-        else {
-            alert('Approval failed');
-        }
+
+        const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
+
+        const items = await loadItems(provider);
+
+        const itemId = parseInt(items.items.filter(item => item.nftContract === collectionAddress && parseInt(item.tokenId) === parseInt(tokenId))[0].id);
+
+        const transaction = await contract.listItem(itemId, price, { gasLimit: 300000 });
+
+        const tx = await transaction.wait();
+
+        return tx.status;
     } catch (error) {
         console.log(error);
     }
@@ -352,7 +350,8 @@ const getOffers = async (provider, itemId) => {
             return {
                 offerer: offerers[i],
                 price: offer.price,
-                isAccepted: offer.isAccepted
+                isAccepted: offer.isAccepted,
+                seller: offer.seller
             }
         });
 

@@ -35,13 +35,17 @@ const ListItem = () => {
 
         try {
             const result = await listItemForSale(signer, itemProperties.nft, itemProperties.tokenId, ethers.utils.parseEther(inputValue.toString()));
+
+            if (result === 1) {
+                setItems({ filteredItems: items.filteredItems.filter(item => item.tokenId !== itemProperties.tokenId), nfts: items.nfts.filter(nft => nft.tokenId !== itemProperties.tokenId) });
+                alert('Item listed successfully!');
+            }
         } catch (error) {
             console.log(error);
-
         }
         finally {
-            await getData();
             setIsListing({ [itemProperties.tokenId + itemProperties.nft]: false })
+            setInputValue(0);
         }
     }
 
@@ -101,10 +105,16 @@ const ListItem = () => {
                                                             <p className="card-text">{nft.description}</p>
                                                             <p className="card-text"><small className="text-muted">{nft.nft}</small></p>
                                                             <Popover trigger={'click'} placement="bottom" content={content} title="Set price">
-                                                                <button onClick={() => {
-                                                                    setInputValue(0);
-                                                                    setProperties(nft.nft, nft.tokenId);
-                                                                }} className="btn btn-primary">List</button>
+                                                                {!isListing[nft.tokenId + nft.nft] ? (
+                                                                    <button onClick={() => {
+                                                                        setInputValue(0);
+                                                                        setProperties(nft.nft, nft.tokenId);
+                                                                    }} className="btn btn-primary">List</button>
+                                                                ) : (
+                                                                    <div className="spinner-border text-primary" role="status">
+                                                                        <span className="visually-hidden">Loading...</span>
+                                                                    </div>
+                                                                )}
                                                             </Popover>
                                                         </div>
                                                     </div>

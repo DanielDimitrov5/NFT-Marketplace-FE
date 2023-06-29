@@ -15,7 +15,6 @@ const ItemCard = ({ contractData, item, i }) => {
 
     const { isConnected, address } = useAccount();
 
-
     const buyItemById = async () => {
         setIsLoading(true);
 
@@ -59,9 +58,9 @@ const ItemCard = ({ contractData, item, i }) => {
 
     const getOfferById = async () => {
         const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
-        const { itemId, price, isAccepted } = await getOffer(provider, item.id, address);
+        const { itemId, price, isAccepted, seller } = await getOffer(provider, item.id, address);
 
-        if (itemId.toString() !== "0") {
+        if (itemId.toString() !== "0" && seller === item.owner) {
             setOffer({ itemId, price, isAccepted });
         }
     }
@@ -100,7 +99,7 @@ const ItemCard = ({ contractData, item, i }) => {
                 console.log(err);
             }
         }
-    }, [isConnected, address, offer]);
+    }, [isConnected, address]);
 
     if (!isVisable) {
         return null;
@@ -121,42 +120,47 @@ const ItemCard = ({ contractData, item, i }) => {
                     <h5 className="card-title">{contractData.name}</h5>
                     <p className="card-text">{contractData.description.slice(0, 200)}...</p>
                     <div className="d-flex justify-content-between align-items-center">
-                        {!isLoading ? (
+                        {item.owner !== address && (
                             <>
-                                {item.price.toString() !== '0' && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-sm btn-outline-secondary"
-                                        onClick={buyItemById}
-                                    >
-                                        Buy
-                                    </button>)}
-                                {
-                                    item.price.toString() === '0' ? (
-                                        <Popover trigger={'click'} placement="bottom" content={content} title="Place offer">
-                                            <button onClick={() => {
-                                                setInputValue(0);
-                                            }} type="button" className="btn btn-sm btn-outline-secondary">
-                                                Place offer
-                                            </button>
+                                {!isLoading ? (
+                                    <>
+                                        {item.price.toString() !== '0' && (
+                                            <button
+                                                type="button"
+                                                className="btn btn-sm btn-outline-secondary"
+                                                onClick={buyItemById}
+                                            >
+                                                Buy
+                                            </button>)}
+                                        {
+                                            item.price.toString() === '0' ? (
+                                                <Popover trigger={'click'} placement="bottom" content={content} title="Place offer">
+                                                    <button onClick={() => {
+                                                        setInputValue(0);
+                                                    }} type="button" className="btn btn-sm btn-outline-secondary">
+                                                        Place offer
+                                                    </button>
 
-                                            {offer && (
-                                                <>
-                                                    <span className="mx-3">|</span>
-                                                    <small className="text-muted">Your current offer: {ethers.utils.formatEther(offer.price)} ETH</small>
-                                                </>
+                                                    {offer && (
+                                                        <>
+                                                            <span className="mx-3">|</span>
+                                                            <small className="text-muted">Your current offer: {ethers.utils.formatEther(offer.price)} ETH</small>
+                                                        </>
+                                                    )}
+                                                </Popover>
+                                            ) : (
+                                                <small className="text-muted">{ethers.utils.formatEther(item.price)} ETH</small>
                                             )}
-                                        </Popover>
-                                    ) : (
-                                        <small className="text-muted">{ethers.utils.formatEther(item.price)} ETH</small>
-                                    )}
-                            </>
+                                    </>
 
-                        ) : (
-                            <div className="spinner-border text-primary" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </div>
+                                ) : (
+                                    <div className="spinner-border text-primary" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </div>
+                                )}
+                            </>
                         )}
+
                     </div>
                 </div>
             </div>

@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 
 import { loadCollections } from "../services/helpers";
 import Loading from "../components/Loading";
-import { Link } from "react-router-dom";
+import CollectionCard from "../components/CollectionCard";
 
 const AddItem = () => {
     const { isConnected } = useAccount();
@@ -51,17 +51,7 @@ const AddItem = () => {
                         ) : (
 
                             collectionData?.map((collection, index) => (
-                                <div className="col-12 col-md-6 col-lg-4" key={index}>
-                                    <div className="card">
-                                        <Link to={`${collection.address}`}>
-                                            <div className="card-body">
-                                                <h5 className="card-title">{collection.name}</h5>
-                                                <h6 className="card-subtitle mb-2 text-muted">{collection.symbol}</h6>
-                                                <h6 className="card-subtitle mb-2 text-muted">{collection.address}</h6>
-                                            </div>
-                                        </Link>
-                                    </div>
-                                </div>
+                                <CollectionCard collection={collection} index={index} />
                             ))
                         )}
                     </div>

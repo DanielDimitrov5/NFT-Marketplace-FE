@@ -9,12 +9,15 @@ const MyOfferes = () => {
 
     const [data, setData] = useState();
     const [isClaiming, setIsClaiming] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
 
     const getData = async () => {
+        setIsLoading(true);
         const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
         const result = await getAccountsOffers(provider, address);
 
         setData(result);
+        setIsLoading(false);
     }
 
     const claim = async (itemId, price) => {
@@ -68,7 +71,16 @@ const MyOfferes = () => {
                                                 <td><Link to={`/item/${item.itemId}`}><b>{item.itemId.toNumber()}</b></Link></td>
                                                 <td>{ethers.utils.formatEther(item.price)} ETH</td>
                                                 <td>{item.isAccepted ? "Accepted" : "Pending"}</td>
-                                                <td><button onClick={() => claim(item.itemId, item.price)} className="btn btn-primary" disabled={!item.isAccepted || isClaiming[item.itemId]}>Claim</button></td>
+                                                <td>
+                                                    {!isClaiming[item.itemId] ? (
+
+                                                        <button onClick={() => claim(item.itemId, item.price)} className="btn btn-primary" disabled={!item.isAccepted}>Claim</button>
+                                                    ) : (
+                                                        <div className="spinner-border text-primary" role="status">
+                                                            <span className="visually-hidden">Loading...</span>
+                                                        </div>
+                                                    )}
+                                                </td>
                                             </tr>
                                         )
                                     }

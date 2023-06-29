@@ -123,7 +123,9 @@ const MintFrom = () => {
                                         <input type="file" className="form-control" id="image" placeholder="Upload image" onChange={handleImageChange} />
                                     </div>
                                     {isMinting ? (
-                                        <button type="submit" className="btn btn-primary" disabled>Mint</button>
+                                        <div className="spinner-border text-primary" role="status">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </div>
                                     ) : (
                                         <button type="submit" className="btn btn-primary">Mint</button>
                                     )

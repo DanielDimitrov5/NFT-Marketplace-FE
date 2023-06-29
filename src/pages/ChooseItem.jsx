@@ -36,6 +36,7 @@ const ChooseItem = () => {
 
         if (status === 1) {
             const newItems = items.filter(item => item.tokenId !== tokenId);
+            alert("Item added to marketplace!");
             setItems(newItems);
         }
 
@@ -60,7 +61,13 @@ const ChooseItem = () => {
                                 <div className="card-body">
                                     <h5 className="card-title">{item.name}</h5>
                                     <p className="card-text">{item.description}</p>
-                                    <Button onClick={() => add(item.tokenId)} className="btn btn-primary" disabled={isAdding[item.tokenId]}>Add</Button>
+                                    {!isAdding[item.tokenId] ? (
+                                        <Button onClick={() => add(item.tokenId)} className="btn btn-primary" disabled={isAdding[item.tokenId]}>Add</Button>
+                                    ) : (
+                                        <div className="spinner-border text-primary" role="status">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="card-footer">
                                     <small className="text-muted">Token ID: {item.tokenId}</small>
@@ -70,7 +77,6 @@ const ChooseItem = () => {
                     </div>
             )}
         </>
-
     )
 }
 
