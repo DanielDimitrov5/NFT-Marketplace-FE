@@ -19,6 +19,7 @@ import MyItems from '../pages/MyItems';
 import ItemDashboard from '../pages/ItemDashboard';
 import MyOfferes from '../pages/MyOffers';
 import UserPage from '../pages/UserPage';
+import NotFound from './NotFound';
 
 import Header from './layout/Header';
 import Footer from './layout/Footer';
@@ -53,6 +54,7 @@ function App() {
                             <Route path="/my-items/:id" element={<ItemDashboard />} />
                             <Route path='/my-offers' element={<MyOfferes />} />
                             <Route path='/user/:id' element={<UserPage />} />
+                            <Route path="*" element={<NotFound />} />
                         </Routes>
                     </div>
                     <Footer />

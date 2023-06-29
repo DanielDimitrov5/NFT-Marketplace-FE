@@ -69,17 +69,22 @@ const getItem = async (id) => {
     const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
     const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
 
-    const item = await contract.items(id)
+    try {
+        const item = await contract.items(id);
 
-    const nftContract = new ethers.Contract(item.nftContract, erc721ABI, provider);
+        const nftContract = new ethers.Contract(item.nftContract, erc721ABI, provider);
 
-    const tokenUri = (await nftContract.tokenURI(item.tokenId)).replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
+        const tokenUri = (await nftContract.tokenURI(item.tokenId)).replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
 
-    const metadata = await axios.get(tokenUri);
+        const metadata = await axios.get(tokenUri);
 
-    metadata.data.image = metadata.data.image.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
+        metadata.data.image = metadata.data.image.replace('ipfs://', process.env.REACT_APP_IPFS_PROVIDER);
 
-    return { item, metadata };
+        return { item, metadata };
+    }
+    catch (err) {
+        console.log(err);
+    }
 }
 
 const loadCollections = async (provider) => {

@@ -8,16 +8,17 @@ import Loading from "../components/Loading"
 import { useAccount } from "wagmi"
 import { InputNumber, Popover } from "antd"
 import { successMessage, errorMessage } from "../services/alertMessages"
+import NotFound from "../components/NotFound"
 
 const Item = () => {
+    const { id } = useParams()
+
     const [data, setData] = useState()
     const [isInteracting, setIsInteracting] = useState(false)
     const [inputValue, setInputValue] = useState(0)
     const [offer, setOffer] = useState();
 
     const { isConnected, address } = useAccount()
-
-    const { id } = useParams()
 
     const getData = async () => {
         const result = await getItem(id);
