@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ethers, providers } from "ethers";
+import { ethers } from "ethers";
 import { Link } from "react-router-dom";
 import { buyItem, placeOffer as placeOfferHelper, getOffer } from "../services/helpers";
 import { Popover, InputNumber } from 'antd';

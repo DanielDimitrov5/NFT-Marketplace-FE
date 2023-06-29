@@ -36,7 +36,7 @@ const Item = () => {
                         <h1>{data?.metadata?.data?.name}</h1>
                         <p>{data?.metadata?.data?.description}</p>
                         <p>Collection: <Link to={`/collections/${data?.item?.nftContract}`}>{data?.item?.nftContract}</Link></p>
-                        <p>Owner: {data?.item?.owner}</p>
+                        <p>Owner: <Link to={`/user/${data?.item?.owner}`}>{data?.item?.owner}</Link></p>
                         {data?.item?.price.toString() !== '0' &&
                             <p>Price: {ethers.utils.formatEther(data?.item?.price.toString())}</p>
                         }

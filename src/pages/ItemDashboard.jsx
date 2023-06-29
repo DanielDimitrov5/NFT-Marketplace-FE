@@ -71,7 +71,6 @@ const ItemDashboard = () => {
                 <h1>You are not the owner of this item!</h1>
                 <Link to="/my-items">Back to your items</Link>
             </>
-
         )
     }
 

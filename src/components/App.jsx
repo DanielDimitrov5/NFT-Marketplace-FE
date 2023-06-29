@@ -18,6 +18,7 @@ import ListItem from '../pages/ListItem';
 import MyItems from '../pages/MyItems';
 import ItemDashboard from '../pages/ItemDashboard';
 import MyOfferes from '../pages/MyOffers';
+import UserPage from '../pages/UserPage';
 import Styleguide from '../pages/Styleguide';
 
 import Header from './layout/Header';
@@ -52,6 +53,7 @@ function App() {
                             <Route path="/my-items" element={<MyItems />} />
                             <Route path="/my-items/:id" element={<ItemDashboard />} />
                             <Route path='/my-offers' element={<MyOfferes />} />
+                            <Route path='/user/:id' element={<UserPage />} />
                             <Route path="styleguide" element={<Styleguide />} />
                         </Routes>
                     </div>
