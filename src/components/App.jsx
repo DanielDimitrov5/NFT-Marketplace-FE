@@ -29,7 +29,7 @@ function App() {
 
     const client = createClient({
         provider,
-        autoConnect: true,
+        autoConnect: true
     });
 
     return (

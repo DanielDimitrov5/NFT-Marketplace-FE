@@ -9,10 +9,11 @@ import Button from '../ui/Button';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
-import { withdrawMoney, isMarketpkaceOwner, getMarketplaceBalance } from '../../services/helpers';
+import { withdrawMoney, isMarketplaceOwner, getMarketplaceBalance } from '../../services/helpers';
 import { ethers } from 'ethers';
+import { successMessage } from '../../services/alertMessages';
 
-const md5 = require('md5');
+import md5 from 'md5';
 
 function Header() {
     const [currentSelection, setCurrentSelection] = useState('Home')
@@ -35,11 +36,11 @@ function Header() {
     const { disconnect } = useDisconnect();
 
     const handleConnectButtonClick = async () => {
-        await connect();
+        connect();
     };
 
     const handleDisconnectButtonClick = async () => {
-        await disconnect();
+        disconnect();
     };
 
     const handleSelect = (e) => {
@@ -51,7 +52,7 @@ function Header() {
             const signer = new ethers.providers.Web3Provider(window.ethereum).getSigner();
             const result = await withdrawMoney(signer);
             if (result === 1) {
-                alert('Withdraw successful!');
+                successMessage('Withdraw successful!');
             }
         }
     }
@@ -59,7 +60,7 @@ function Header() {
     const checkOwner = async () => {
         if (isConnected) {
             const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
-            const result = await isMarketpkaceOwner(provider, address);
+            const result = await isMarketplaceOwner(provider, address);
             setIsOwner(result);
         }
     }

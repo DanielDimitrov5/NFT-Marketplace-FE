@@ -218,11 +218,6 @@ const loadItemsForListing = async (provider, address) => {
 }
 
 const listItemForSale = async (provider, collectionAddress, tokenId, price) => {
-    if (price <= 0) {
-        alert('Price must be greater than 0');
-        return;
-    }
-
     try {
         const isApproved = await checkApproval(provider, collectionAddress, tokenId);
 
@@ -379,7 +374,7 @@ const acceptOffer = async (signer, itemId, offerer) => {
 
         const approve = await checkApproval(signer, nftContractAddress, tokenId);
 
-        if (approve != marketplaceContract.address) {
+        if (approve !== marketplaceContract.address) {
             const aprrovalTx = await approveToken(signer, nftContractAddress, tokenId);
 
             if (aprrovalTx !== 1) {
@@ -475,7 +470,7 @@ const claimItem = async (signer, itemId, price) => {
 
 }
 
-const isMarketpkaceOwner = async (provider, address) => {
+const isMarketplaceOwner = async (provider, address) => {
     try {
         const contract = new ethers.Contract(marketplaceContract.address, marketplaceContract.abi, provider);
 
@@ -544,7 +539,7 @@ export {
     getItem, loadItemsForListing, listItemForSale, buyItem,
     addExistingCollection, mintNFT, loadItemsForAdding, placeOffer,
     getOffers, acceptOffer, getAccountsOffers, getOffer, claimItem,
-    isMarketpkaceOwner, withdrawMoney, getMarketplaceBalance, deployNFTCollection,
+    isMarketplaceOwner, withdrawMoney, getMarketplaceBalance, deployNFTCollection,
     approveToken, checkApproval, marketplaceContract
 };
 
