@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
-import { loadCollections } from '../services/helpers';
 import { ethers } from 'ethers';
 import Loading from '../components/Loading';
-import { Link } from 'react-router-dom';
 import { useAccount } from 'wagmi';
+import CollectionCard from '../components/CollectionCard';
+import { useSDK } from '../hooks/useSDK';
 
 import nftABI from '../contractData/abi/NFT.json';
 
 const MintFrom = () => {
+    const sdk = useSDK();
 
     const [collections, setCollections] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -15,12 +16,13 @@ const MintFrom = () => {
 
     const handleLoadCollections = async () => {
         setIsLoading(true);
+
         const provider = new ethers.providers.InfuraProvider(
             process.env.REACT_APP_NETWORK,
             process.env.REACT_APP_API_KEY
         );
 
-        const collections = await loadCollections(provider);
+        const collections = await sdk.loadCollections();
 
         const ownersPromises = collections.map((collection) => {
             const contract = new ethers.Contract(collection.address, nftABI, provider);
@@ -65,17 +67,7 @@ const MintFrom = () => {
                             <div className="row">
                                 {collections.length > 0 ? (
                                     collections.map((collection, index) => (
-                                        <div className="col-12 col-md-6 col-lg-4" key={index}>
-                                            <Link to={`/mint-from/${collection.address}`}>
-                                                <div className="card">
-                                                    <div className="card-body">
-                                                        <h5 className="card-title">{collection.name}</h5>
-                                                        <h6 className="card-subtitle mb-2 text-muted">{collection.symbol}</h6>
-                                                        <h6 className="card-subtitle mb-2 text-muted">{collection.address}</h6>
-                                                    </div>
-                                                </div>
-                                            </Link>
-                                        </div>
+                                        <CollectionCard collection={collection} key={index} />
                                     ))
                                 ) : (
                                     <div className="col-12">

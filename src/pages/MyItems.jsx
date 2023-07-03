@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { loadItems } from "../services/helpers";
-import { ethers } from "ethers";
 import Loading from "../components/Loading";
 import { Link } from "react-router-dom";
+import { useSDK } from "../hooks/useSDK";
 
 const MyItems = () => {
+    const sdk = useSDK();
+
     const { address } = useAccount();
     const [contractData, setContractData] = useState({});
     const [isLoadingContractData, setIsLoadingContractData] = useState(true);
 
     const load = async () => {
         setIsLoadingContractData(true);
-        const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
-        const { items, metadataArrModified } = await loadItems(provider);
+        const { items, metadataArrModified } = await sdk.loadItems();
 
         const filteredItems = items.filter(item => item.owner === address);
         const filteredMetadata = metadataArrModified.filter(item => item.owner === address);

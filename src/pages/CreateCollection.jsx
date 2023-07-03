@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useAccount } from "wagmi";
-import { ethers } from "ethers";
-import { deployNFTCollection as deploy, addExistingCollection } from "../services/helpers";
 import { successMessage, errorMessage } from "../services/alertMessages";
+import { useSDK } from "../hooks/useSDK";
 
 const CreateCollection = () => {
+    const sdk = useSDK();
+
     const { isConnected } = useAccount();
 
     const [collectionName, setCollectionName] = useState("");
@@ -16,13 +17,9 @@ const CreateCollection = () => {
         setIsLoading(true);
 
         try {
+            const nft = await sdk.deployNFTCollection(collectionName, collectionSymbol);
 
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-
-            const nft = await deploy(signer, collectionName, collectionSymbol);
-
-            await addExistingCollection(signer, nft.address);
+            await sdk.addExistingCollection(nft.address);
 
             successMessage("Collection created successfully!");
         } catch (error) {

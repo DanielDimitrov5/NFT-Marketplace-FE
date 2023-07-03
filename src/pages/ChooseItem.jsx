@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { addItemToMarketplace, loadItemsForAdding } from "../services/helpers";
-import { ethers } from "ethers";
 import Button from "../components/ui/Button";
 import Loading from "../components/Loading";
 import { useAccount } from "wagmi";
 import { successMessage } from "../services/alertMessages";
 
+import { useSDK } from "../hooks/useSDK";
+
 const ChooseItem = () => {
+    const sdk = useSDK();
 
     const { id: nftContractAddress } = useParams()
     const [items, setItems] = useState([]);
@@ -19,9 +20,7 @@ const ChooseItem = () => {
     const getData = async () => {
         setIsLoading(true);
 
-        const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
-
-        const nftsFiltered = await loadItemsForAdding(provider, nftContractAddress, address);
+        const nftsFiltered = await sdk.loadItemsForAdding(nftContractAddress, address);
 
         setItems(nftsFiltered);
         setIsLoading(false);
@@ -30,10 +29,7 @@ const ChooseItem = () => {
     const add = async (tokenId) => {
         setIsAdding({ [tokenId]: true });
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-
-        const status = await addItemToMarketplace(signer, nftContractAddress, tokenId);
+        const status = await sdk.addItemToMarketplace(nftContractAddress, tokenId);
 
         if (status === 1) {
             const newItems = items.filter(item => item.tokenId !== tokenId);

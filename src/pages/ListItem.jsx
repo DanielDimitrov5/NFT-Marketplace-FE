@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
-import { loadItemsForListing, listItemForSale } from "../services/helpers";
 import { Popover, InputNumber } from 'antd';
 import Loading from "../components/Loading";
 import { successMessage, errorMessage } from "../services/alertMessages";
+import { useSDK } from "../hooks/useSDK";
 
 const ListItem = () => {
+    const sdk = useSDK();
 
     const [items, setItems] = useState([]);
     const { isConnected, address } = useAccount();
@@ -17,9 +18,8 @@ const ListItem = () => {
 
     const getData = async () => {
         setIsLoading(true);
-        const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
 
-        const { filteredItems, nfts } = await loadItemsForListing(provider, address);
+        const { filteredItems, nfts } = await sdk.loadItemsForListing(address);
 
         setItems({ filteredItems, nfts });
         setIsLoading(false);
@@ -31,11 +31,9 @@ const ListItem = () => {
 
     const list = async () => {
         setIsListing({ [itemProperties.tokenId + itemProperties.nft]: true })
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
 
         try {
-            const result = await listItemForSale(signer, itemProperties.nft, itemProperties.tokenId, ethers.utils.parseEther(inputValue.toString()));
+            const result = await sdk.listItemForSale(itemProperties.nft, itemProperties.tokenId, ethers.utils.parseEther(inputValue.toString()));
 
             if (result === 1) {
                 setItems({ filteredItems: items.filteredItems.filter(item => item.tokenId !== itemProperties.tokenId), nfts: items.nfts.filter(nft => nft.tokenId !== itemProperties.tokenId) });

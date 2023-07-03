@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
-import { loadCollections } from '../services/helpers';
 import Loading from '../components/Loading';
 import CollectionCard from '../components/CollectionCard';
 import { errorMessage } from '../services/alertMessages';
+import { useSDK } from '../hooks/useSDK';
 
 const Collections = () => {
+    const sdk = useSDK();
+
     const [collections, setCollections] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -13,9 +14,7 @@ const Collections = () => {
         setIsLoading(true);
 
         try {
-            const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
-
-            const resolvedCollections = await loadCollections(provider);
+            const resolvedCollections = await sdk.loadCollections();
 
             setCollections(resolvedCollections);
         } catch (err) {

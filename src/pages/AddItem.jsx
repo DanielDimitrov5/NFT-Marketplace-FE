@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { ethers } from "ethers";
 
-import { loadCollections } from "../services/helpers";
 import Loading from "../components/Loading";
 import CollectionCard from "../components/CollectionCard";
 import { errorMessage } from "../services/alertMessages";
 
+import { useSDK } from "../hooks/useSDK";
+
 const AddItem = () => {
+    const sdk = useSDK();
+
     const { isConnected } = useAccount();
     const [collectionData, setCollectionData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -16,9 +18,7 @@ const AddItem = () => {
         setIsLoading(true);
 
         try {
-            const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
-
-            const collections = await loadCollections(provider);
+            const collections = await sdk.loadCollections();
 
             setCollectionData(collections);
 

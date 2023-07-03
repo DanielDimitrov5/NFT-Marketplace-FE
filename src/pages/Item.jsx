@@ -2,15 +2,16 @@ import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { ethers } from "ethers"
 import { Link } from "react-router-dom"
-import { getItem, buyItem, placeOffer as placeOfferHelper, getOffer } from "../services/helpers"
 import { Image } from 'antd';
 import Loading from "../components/Loading"
 import { useAccount } from "wagmi"
 import { InputNumber, Popover } from "antd"
 import { successMessage, errorMessage } from "../services/alertMessages"
-import NotFound from "../components/NotFound"
+import { useSDK } from "../hooks/useSDK"
 
 const Item = () => {
+    const sdk = useSDK()
+
     const { id } = useParams()
 
     const [data, setData] = useState()
@@ -21,7 +22,7 @@ const Item = () => {
     const { isConnected, address } = useAccount()
 
     const getData = async () => {
-        const result = await getItem(id);
+        const result = await sdk.getItem(id);
 
         setData(result)
 
@@ -30,12 +31,10 @@ const Item = () => {
 
     const buyItemById = async () => {
         setIsInteracting(true);
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
 
-        if (signer && data) {
+        if (isConnected && data) {
 
-            const result = await buyItem(signer, data.item.id, data.item.price);
+            const result = await sdk.buyItem(data.item.id, data.item.price);
 
             if (result === 1) {
                 successMessage('Item bought successfully!');
@@ -52,14 +51,11 @@ const Item = () => {
     const placeOffer = async () => {
         setIsInteracting(true);
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-
-        if (signer && data) {
+        if (isConnected && data) {
 
             const price = ethers.utils.parseEther(inputValue.toString());
 
-            const result = await placeOfferHelper(signer, data?.item?.id, price);
+            const result = await sdk.placeOffer(data?.item?.id, price);
 
             if (result === 1) {
                 successMessage('Offer placed successfully!');
@@ -75,9 +71,7 @@ const Item = () => {
     const getOfferById = async (result) => {
         setIsInteracting(true);
 
-        const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
-
-        const { itemId, price, isAccepted, seller } = await getOffer(provider, result?.item?.id, address);
+        const { itemId, price, isAccepted, seller } = await sdk.getOffer(result?.item?.id, address);
 
         if (itemId.toString() !== "0" && seller === result?.item?.owner) {
             setOffer({ itemId, price, isAccepted });
