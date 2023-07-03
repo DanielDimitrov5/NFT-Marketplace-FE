@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
 import ItemCards from '../components/ItemCards';
-import { loadItems } from '../services/helpers';
 import { useAccount } from 'wagmi';
 
-const NETWORK = process.env.REACT_APP_NETWORK;
-const API_KEY = process.env.REACT_APP_API_KEY;
+import { useSDK } from '../hooks/useSDK';
 
 function Home() {
 
@@ -13,12 +10,12 @@ function Home() {
     const [isLoadingContractData, setIsLoadingContractData] = useState(true);
     const { address } = useAccount();
 
+    const sdk = useSDK();
+
     const getContractData = async () => {
         setIsLoadingContractData(true);
 
-        const provider = new ethers.providers.InfuraProvider(NETWORK, API_KEY);
-
-        const { items, metadataArrModified } = await loadItems(provider);
+        const { items, metadataArrModified } = await sdk.loadItems();
 
         const filteredItems = items.filter(item => item.owner !== address);
         const filteredMetadata = metadataArrModified.filter(item => item.owner !== address);
