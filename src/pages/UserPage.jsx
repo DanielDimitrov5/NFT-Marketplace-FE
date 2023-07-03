@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { loadItems } from "../services/helpers";
-import { ethers } from "ethers";
 import ItemCards from "../components/ItemCards";
 import { isAddress } from "ethers/lib/utils.js";
+import { useSDK } from "../hooks/useSDK";
 
 import { useParams } from "react-router-dom";
 
 const UserPage = () => {
+    const sdk = useSDK();
 
     const { id: walletAddress } = useParams();
 
@@ -16,8 +16,7 @@ const UserPage = () => {
     const getData = async () => {
         setIsLoading(true);
 
-        const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
-        const { items, metadataArrModified } = (await loadItems(provider));
+        const { items, metadataArrModified } = (await sdk.loadItems());
 
         const itemsOwnedByUser = items.filter(item => item.owner === walletAddress);
 
@@ -58,7 +57,7 @@ const UserPage = () => {
                 </div>
             </div>
             <div className="row">
-                {data && data.items.length == 0 ? (
+                {data && data.items.length === 0 ? (
                     <div className="col-12">
                         <br />
                         <h1>No items found</h1>

@@ -9,13 +9,14 @@ import Button from '../ui/Button';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
-import { withdrawMoney, isMarketplaceOwner, getMarketplaceBalance } from '../../services/helpers';
-import { ethers } from 'ethers';
 import { successMessage } from '../../services/alertMessages';
+import { useSDK } from '../../hooks/useSDK';
 
 import md5 from 'md5';
 
 function Header() {
+    const sdk = useSDK();
+
     const [currentSelection, setCurrentSelection] = useState('Home')
     const [isOwner, setIsOwner] = useState(false)
     const [marketplaceBalance, setMarketplaceBalance] = useState(0)
@@ -49,8 +50,7 @@ function Header() {
 
     const handleWithdraw = async () => {
         if (isConnected) {
-            const signer = new ethers.providers.Web3Provider(window.ethereum).getSigner();
-            const result = await withdrawMoney(signer);
+            const result = await sdk.withdrawMoney();
             if (result === 1) {
                 successMessage('Withdraw successful!');
             }
@@ -59,16 +59,14 @@ function Header() {
 
     const checkOwner = async () => {
         if (isConnected) {
-            const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
-            const result = await isMarketplaceOwner(provider, address);
+            const result = await sdk.isMarketplaceOwner(address);
             setIsOwner(result);
         }
     }
 
     const getBalance = async () => {
         if (isConnected) {
-            const provider = new ethers.providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_INFURA_KEY);
-            const result = await getMarketplaceBalance(provider);
+            const result = await sdk.getMarketplaceBalance();
 
             setMarketplaceBalance(result);
         }

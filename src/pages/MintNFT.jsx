@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
-import { mintNFT } from "../services/helpers";
 import nftABI from "../contractData/abi/NFT.json";
 import { successMessage, errorMessage } from "../services/alertMessages";
+import { useSDK } from "../hooks/useSDK";
 
 const MintFrom = () => {
+    const sdk = useSDK();
+
     const { id } = useParams();
     const { isConnected, address } = useAccount();
     const [isOwner, setIsOwner] = useState(true);
@@ -51,10 +53,10 @@ const MintFrom = () => {
 
         try {
             setIsMinting(true);
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
 
-            const result = await mintNFT(signer, id, data);
+            const ipfsSDK = sdk.infuraIpfsClient(process.env.REACT_APP_PROJECT_ID, process.env.REACT_APP_PROJECT_SECRET);
+
+            const result = await ipfsSDK.mintNFT(id, data);
 
             if (result === 1) {
                 successMessage('NFT minted successfully!');

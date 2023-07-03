@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { ethers } from "ethers";
 import { isAddress } from "ethers/lib/utils.js";
-import { addExistingCollection } from "../services/helpers";
 import { useAccount } from "wagmi";
 import { successMessage } from "../services/alertMessages";
+import { useSDK } from "../hooks/useSDK";
 
 const AddExistingCollection = () => {
+    const sdk = useSDK();
+
     const [collectionAddress, setCollectionAddress] = useState("");
     const [isValidAddress, setIsValidAddress] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,13 +25,10 @@ const AddExistingCollection = () => {
         if (isAddress(collectionAddress)) {
             setIsSubmitting(true);
 
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-
-            const result = await addExistingCollection(signer, collectionAddress);
+            const result = await sdk.addExistingCollection(collectionAddress);
 
             if (result === 1) {
-                successMessage("successfully! added collection");
+                successMessage("Added collection successfully!");
             }
 
             setIsSubmitting(false);
