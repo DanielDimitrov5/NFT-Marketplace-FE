@@ -121,7 +121,7 @@ const Item = () => {
                         <p>Collection: <Link to={`/collections/${data?.item?.nftContract}`}>{data?.item?.nftContract}</Link></p>
                         <p>Owner: <Link to={`/user/${data?.item?.owner}`}>{data?.item?.owner}</Link></p>
                         {data?.item?.price.toString() !== "0" && <p>Price: {ethers.utils.formatEther(data?.item?.price.toString())}</p>}
-                        {data?.item?.owner !== address &&
+                        {data?.item?.owner !== address && address !== undefined &&
                             <>
                                 {!isInteracting ? (
                                     <>

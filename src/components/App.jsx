@@ -39,10 +39,11 @@ function App() {
 
     const client = createClient({
         provider,
-        autoConnect: true
+        autoConnect: true,
     });
 
     useEffect(() => {
+
         let provider;
 
         if (window.ethereum) {
@@ -52,7 +53,13 @@ function App() {
             provider = new providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
         }
 
-        const sdk = new NFTMarketplaceSDK(provider, marketplaceContract.address, marketplaceContract.abi, nftABI, nftBytecode.bytecode, process.env.REACT_APP_IPFS_PROVIDER);
+        const sdk = new NFTMarketplaceSDK(
+            provider,
+            marketplaceContract.address,
+            marketplaceContract.abi,
+            nftABI,
+            nftBytecode.bytecode,
+            process.env.REACT_APP_IPFS_PROVIDER);
         setSdk(sdk);
     }, []);
 

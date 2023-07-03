@@ -57,7 +57,7 @@ const UserPage = () => {
                 </div>
             </div>
             <div className="row">
-                {data && data.items.length == 0 ? (
+                {data && data.items.length === 0 ? (
                     <div className="col-12">
                         <br />
                         <h1>No items found</h1>
