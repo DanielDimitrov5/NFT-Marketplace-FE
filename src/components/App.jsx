@@ -46,12 +46,12 @@ function App() {
 
         let provider;
 
-        if (window.ethereum) {
-            provider = new ethers.providers.Web3Provider(window.ethereum).getSigner();
-        }
-        else {
-            provider = new providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
-        }
+        // if (window.ethereum) {
+        //     provider = new ethers.providers.Web3Provider(window.ethereum).getSigner();
+        // }
+        // else {
+        provider = new providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
+        // }
 
         const sdk = new NFTMarketplaceSDK(
             provider,

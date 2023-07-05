@@ -46,6 +46,8 @@ const ItemDashboard = () => {
             [offererAddress]: true
         }));
 
+        setIsApproving(true);
+
         try {
             const result = await sdk.acceptOffer(id, offererAddress);
 
@@ -62,6 +64,7 @@ const ItemDashboard = () => {
                 ...prevState,
                 [offererAddress]: false
             }));
+            setIsApproving(false);
             getData();
         }
     }

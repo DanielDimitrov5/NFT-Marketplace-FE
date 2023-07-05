@@ -8830,10 +8830,10 @@ neo-async@^2.6.2:
   resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-nft-mp-sdk@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/nft-mp-sdk/-/nft-mp-sdk-1.1.1.tgz"
-  integrity sha512-x89zcZmmP/drq+hKCjijY6TFuqQ9n7RE3dpF64qHwC4wExGZOl5iSKEOitRKfb5jCt0JYxkVx2lDDXlH2ulQVA==
+nft-mp-sdk@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.npmjs.org/nft-mp-sdk/-/nft-mp-sdk-1.1.2.tgz"
+  integrity sha512-A9IEsy6h0/9nHvh/eYBZ8+h/SyUCfNzkuhW3vSbH44BfNQqjPm6URmz7Q9DCCenftJOrFods093bqEBilhd7Hg==
   dependencies:
     axios "^1.4.0"
     buffer "^6.0.3"

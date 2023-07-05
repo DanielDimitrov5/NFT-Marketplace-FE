@@ -7,7 +7,7 @@ import { useSDK } from "../hooks/useSDK";
 const MyItems = () => {
     const sdk = useSDK();
 
-    const { address } = useAccount();
+    const { isConnected, address } = useAccount();
     const [contractData, setContractData] = useState({});
     const [isLoadingContractData, setIsLoadingContractData] = useState(true);
 
@@ -26,39 +26,48 @@ const MyItems = () => {
         load();
     }, [address]);
 
-
     return (
         <div className="container">
-            <div className="row">
-                <div className="col-12">
-                    <br />
-                    <h1>My Items</h1>
-                </div>
-            </div>
-            {isLoadingContractData ? (
-                <Loading />
+            <br />
+            {isConnected ? (
+                <>
+                    <div className="row">
+                        <div className="col-12">
+                            <h1>My Items</h1>
+                        </div>
+                    </div>
+                    {isLoadingContractData ? (
+                        <Loading />
+                    ) : (
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="row">
+                                    {contractData.items && contractData.items.map((item, index) => {
+                                        return (
+                                            <div className="col-3" key={index}>
+                                                <div className="card">
+                                                    <img src={contractData.metaData[index].image} className="card-img-top" alt="..." />
+                                                    <div className="card-body">
+                                                        <h5 className="card-title">{contractData.metaData[index].name}</h5>
+                                                        <p className="card-text">{contractData.metaData[index].description.slice(0, 200)}...</p>
+                                                        <Link to={`${item.id}`} className="btn btn-primary">View details</Link>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+                                    )}
+                                </div>
+                            </div>
+                        </div>)}
+                </>
             ) : (
                 <div className="row">
                     <div className="col-12">
-                        <div className="row">
-                            {contractData.items && contractData.items.map((item, index) => {
-                                return (
-                                    <div className="col-3" key={index}>
-                                        <div className="card">
-                                            <img src={contractData.metaData[index].image} className="card-img-top" alt="..." />
-                                            <div className="card-body">
-                                                <h5 className="card-title">{contractData.metaData[index].name}</h5>
-                                                <p className="card-text">{contractData.metaData[index].description.slice(0, 200)}...</p>
-                                                <Link to={`${item.id}`} className="btn btn-primary">View details</Link>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                            }
-                            )}
-                        </div>
+                        <h1>Please connect your wallet</h1>
                     </div>
-                </div>)}
+                </div>
+            )}
         </div>
     )
 }

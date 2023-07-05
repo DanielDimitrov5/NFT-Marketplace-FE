@@ -10,6 +10,7 @@ import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
 import { successMessage } from '../../services/alertMessages';
+import { ethers } from 'ethers';
 import { useSDK } from '../../hooks/useSDK';
 
 import md5 from 'md5';
@@ -38,7 +39,7 @@ function Header() {
 
     const handleConnectButtonClick = async () => {
         connect();
-    };
+    }
 
     const handleDisconnectButtonClick = async () => {
         disconnect();
@@ -73,6 +74,11 @@ function Header() {
     }
 
     useEffect(() => {
+        if (isConnected) {
+            const signer = new ethers.providers.Web3Provider(window.ethereum).getSigner();
+            sdk.connectSigner(signer);
+        }
+
         checkOwner();
         getBalance();
     }, [isConnected, address])

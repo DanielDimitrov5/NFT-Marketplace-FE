@@ -8,6 +8,7 @@ import { useAccount } from "wagmi"
 import { InputNumber, Popover } from "antd"
 import { successMessage, errorMessage } from "../services/alertMessages"
 import { useSDK } from "../hooks/useSDK"
+import { useBalance } from "wagmi";
 
 const Item = () => {
     const sdk = useSDK()
@@ -21,6 +22,10 @@ const Item = () => {
 
     const { isConnected, address } = useAccount()
 
+    const { data: balance } = useBalance({
+        address,
+    });
+
     const getData = async () => {
         const result = await sdk.getItem(id);
 
@@ -33,6 +38,11 @@ const Item = () => {
         setIsInteracting(true);
 
         if (isConnected && data) {
+            if (balance.value.lt(data.item.price)) {
+                errorMessage('Insufficient funds!');
+                setIsInteracting(false);
+                return;
+            }
 
             const result = await sdk.buyItem(data.item.id, data.item.price);
 
@@ -102,7 +112,7 @@ const Item = () => {
 
     useEffect(() => {
         getData();
-    }, []);
+    }, [address]);
 
     return (
         <div className="container">
