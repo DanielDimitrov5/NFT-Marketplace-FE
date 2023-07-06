@@ -1,5 +1,5 @@
 {
-    "name": "lime-academy-examples",
+    "name": "nft-marketplace",
     "version": "0.1.0",
     "private": true,
     "scripts": {
@@ -31,7 +31,6 @@
         "@fortawesome/free-brands-svg-icons": "^6.4.0",
         "@fortawesome/react-fontawesome": "^0.2.0",
         "antd": "^5.6.1",
-        "axios": "^1.4.0",
         "bootstrap": "^5.2.0",
         "ethers": "^5.7.2",
         "ipfs-http-client": "^60.0.1",

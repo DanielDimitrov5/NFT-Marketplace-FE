@@ -2,12 +2,14 @@
 
 This repository contains a decentralized application (DApp) built using React.js that interacts with an NFT Marketplace smart contract. The application uses the NFT Marketplace SDK to facilitate interactions with the Ethereum blockchain.
 
-![Application Overview](./path/to/overview-image.png)
+[NFT-Marketplace contracts](https://github.com/DanielDimitrov5/NFT-Marketplace-Project)
+[NFT-Marketplace-SDK](https://github.com/DanielDimitrov5/NFT-Marketplace-SDK)
 
 ## Table of Contents
 
 - [Getting Started](#getting-started)
 - [Routes Description](#routes-description)
+- [Images](#images)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Built With](#built-with)
@@ -20,11 +22,7 @@ Before running this application, make sure you have installed `node` and `npm` o
 
 ## Routes Description
 
-![Homepage Screenshot](./path/to/homepage-screenshot.png)
-
 - `/` - The home page of the DApp. Main landing page with an overview of the marketplace.
-
-![Item Page Screenshot](https://i.imgur.com/BDyinDK.png)
 
 - `/item/:id` - Displays detailed information about a single NFT item based on the given ID.
 
@@ -32,13 +30,9 @@ Before running this application, make sure you have installed `node` and `npm` o
 
 - `/add-existing-collection` - Allows users to add an existing NFT collection to the marketplace.
 
-![Mint NFT Screenshot](https://i.imgur.com/ZyaqfFr.png)
-
 - `/mint-from` - Displays a list of collections from which a user can mint NFTs.
 
 - `/mint-from/:id` - Allows users to mint new NFTs from a specific collection based on the given ID.
-
-![Collections Screenshot](./path/to/collections-screenshot.png)
 
 - `/collections` - Displays a list of all collections available in the marketplace.
 
@@ -50,23 +44,24 @@ Before running this application, make sure you have installed `node` and `npm` o
 
 - `/list-item` - Allows users to list items for sale in the marketplace.
 
-![My Items Screenshot](./path/to/my-items-screenshot.png)
-
 - `/my-items` - Displays a list of items owned by the current user.
 
 - `/my-items/:id` - Allows users to manage a specific item based on the given ID.
 
-![My Offers Screenshot](https://i.imgur.com/NT0qAos.png)
-
 - `/my-offers` - Displays a list of offers made by the user.
-
-![User Page Screenshot](https://i.imgur.com/yx66PMi.png)
 
 - `/user/:id` - Displays all items owned by a user based on the given ID.
 
-![404 Page Screenshot](./path/to/404-page-screenshot.png)
+## Images
 
-- `*` - Displays a 404 not found page for undefined routes.
+### Home page
+![Homepage Screenshot](https://i.imgur.com/zaaAOsz.png)
+### Item page
+![Item Page](https://i.imgur.com/FsmroCC.png)
+### Mint NFT page
+![Mint NFT Screenshot](https://i.imgur.com/ZyaqfFr.png)
+### My offers page
+![My Offers Screenshot](https://i.imgur.com/NT0qAos.png)
 
 ## Installation
 
@@ -85,8 +80,6 @@ This project is built using the following dependencies:
 
 - [react](https://www.npmjs.com/package/react) ^18.2.0
 - [antd](https://www.npmjs.com/package/antd) ^5.6.1
-- [axios](https://www.npmjs.com/package/axios) ^1.4.0
-- [bootstrap](https://www.npmjs.com/package/bootstrap) ^5.2.0
 - [ethers](https://www.npmjs.com/package/ethers) ^5.7.2
 - [ipfs-http-client](https://www.npmjs.com/package/ipfs-http-client) ^60.0.1
 - [nft-mp-sdk](https://www.npmjs.com/package/nft-mp-sdk) ^1.1.2
