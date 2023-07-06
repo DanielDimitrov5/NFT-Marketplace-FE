@@ -53,7 +53,7 @@ const CreateCollection = () => {
                 <div className="container">
                     <div className="row">
                         <div className="col-12">
-                            <h1>Create NFT collection</h1>
+                            <h1>Create a new NFT collection</h1>
                             <br />
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-3">
@@ -80,9 +80,7 @@ const CreateCollection = () => {
                 <div className="container">
                     <div className="row">
                         <div className="col-12">
-                            <h1>Connect your wallet</h1>
-                            <br />
-                            <p>Connect your wallet to create a collection</p>
+                            <h1>Please connect your wallet</h1>
                         </div>
                     </div>
                 </div>

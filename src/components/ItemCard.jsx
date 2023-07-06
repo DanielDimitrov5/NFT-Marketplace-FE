@@ -5,6 +5,7 @@ import { Popover, InputNumber } from 'antd';
 import { useAccount } from "wagmi";
 import { successMessage, errorMessage } from "../services/alertMessages";
 import { useSDK } from "../hooks/useSDK";
+import { useBalance } from "wagmi";
 
 const ItemCard = ({ contractData, item, i }) => {
     const sdk = useSDK();
@@ -16,10 +17,20 @@ const ItemCard = ({ contractData, item, i }) => {
 
     const { isConnected, address } = useAccount();
 
+    const { data: balance } = useBalance({
+        address,
+    });
+
     const buyItemById = async () => {
         setIsLoading(true);
 
         if (isConnected) {
+
+            if (balance.value.lt(item.price)) {
+                errorMessage('Insufficient funds!');
+                setIsLoading(false);
+                return;
+            }
 
             const result = await sdk.buyItem(item.id, item.price);
 

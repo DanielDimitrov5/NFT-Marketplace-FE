@@ -26,7 +26,7 @@ import Footer from './layout/Footer';
 
 import NFTMarketplaceSDK from 'nft-mp-sdk';
 import { useEffect, useState } from 'react';
-import { ethers, providers } from 'ethers';
+import { providers } from 'ethers';
 import { marketplaceContract } from '../services/helpers';
 import nftABI from '../contractData/abi/NFT.json';
 import nftBytecode from '../contractData/NftBytecode.json'
@@ -44,14 +44,7 @@ function App() {
 
     useEffect(() => {
 
-        let provider;
-
-        if (window.ethereum) {
-            provider = new ethers.providers.Web3Provider(window.ethereum).getSigner();
-        }
-        else {
-            provider = new providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
-        }
+        const provider = new providers.InfuraProvider(process.env.REACT_APP_NETWORK, process.env.REACT_APP_API_KEY);
 
         const sdk = new NFTMarketplaceSDK(
             provider,
@@ -73,7 +66,7 @@ function App() {
                         <Header />
                         <div className="main">
                             <Routes>
-                                <Route path="/" element={<Home sdk={sdk} />} />
+                                <Route path="/" element={<Home />} />
                                 <Route path="/item/:id" element={<Item />} />
                                 <Route path="/create-collection" element={<CreateCollection />} />
                                 <Route path="/add-existing-collection" element={<AddExistingCollection />} />
