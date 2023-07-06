@@ -3,6 +3,7 @@
 This repository contains a decentralized application (DApp) built using React.js that interacts with an NFT Marketplace smart contract. The application uses the NFT Marketplace SDK to facilitate interactions with the Ethereum blockchain.
 
 [NFT-Marketplace contracts](https://github.com/DanielDimitrov5/NFT-Marketplace-Project)
+
 [NFT-Marketplace-SDK](https://github.com/DanielDimitrov5/NFT-Marketplace-SDK)
 
 ## Table of Contents
