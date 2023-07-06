@@ -41,16 +41,15 @@ const AddExistingCollection = () => {
     return (
         <>
             <div className="container">
+                <br />
                 <div className="row">
                     <div className="col-12">
                         {!isConnected ? (
                             <div className="col-12">
-                                <br />
                                 <h1>Please connect your wallet</h1>
                             </div>
                         ) : (
                             <>
-                                <br />
                                 <h1 className="text-center">Add Existing Collection</h1>
                                 <div className="text-center">
                                     <p>Enter the address of the collection you want to add</p>

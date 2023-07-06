@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import nftABI from "../contractData/abi/NFT.json";
@@ -112,7 +112,7 @@ const MintFrom = () => {
                                 <br />
                                 <h1 className="text-center">Mint NFT</h1>
                                 <div className="text-center">
-                                    <p>{id}</p>
+                                    <Link to={`/collections/${id}`}>{id}</Link>
                                 </div>
                                 <form onSubmit={handleSubmit}>
                                     <div className="form-group">
