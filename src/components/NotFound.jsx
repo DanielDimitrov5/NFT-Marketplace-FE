@@ -1,4 +1,4 @@
-const NotFound = () => {
+const NotFound = ({ message }) => {
 
     return (
         <div className="container">
@@ -11,6 +11,7 @@ const NotFound = () => {
             <div className="row">
                 <div className="col-12">
                     <h2>Page not found</h2>
+                    <p>{message}</p>
                 </div>
             </div>
         </div>

@@ -35,7 +35,7 @@ const MyOfferes = () => {
                         </>
                     ) : (
                         <>
-                            {data && data.length == 0 ? (
+                            {data && data.length === 0 ? (
                                 <>
                                     <h1>You haven't made any offers yet</h1>
                                 </>
@@ -76,7 +76,7 @@ const MyOfferes = () => {
             ) : (
                 <div className="row">
                     <div className="col-12">
-                        <h1>Please connect your wallet</h1>
+                        <h1>Please connect your wallet!</h1>
                     </div>
                 </div>
             )}

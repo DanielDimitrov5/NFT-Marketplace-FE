@@ -4,7 +4,6 @@ import { successMessage, errorMessage } from "../services/alertMessages.js";
 import { useSDK } from "../hooks/useSDK";
 import { InputNumber, Popover } from "antd";
 
-
 const ListItemCard = ({ nft, i }) => {
     const sdk = useSDK();
 

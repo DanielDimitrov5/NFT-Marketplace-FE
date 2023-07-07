@@ -31,7 +31,7 @@ const ListItem = () => {
                     {!isConnected ? (
                         <div className="col-12">
                             <br />
-                            <h1>Please connect your wallet</h1>
+                            <h1>Please connect your wallet!</h1>
                         </div>
                     ) : (
                         <>

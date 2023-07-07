@@ -9,6 +9,7 @@ import { InputNumber, Popover } from "antd"
 import { successMessage, errorMessage } from "../services/alertMessages"
 import { useSDK } from "../hooks/useSDK"
 import { useBalance } from "wagmi";
+import NotFound from "../components/NotFound";
 
 const Item = () => {
     const sdk = useSDK()
@@ -19,6 +20,7 @@ const Item = () => {
     const [isInteracting, setIsInteracting] = useState(false)
     const [inputValue, setInputValue] = useState(0)
     const [offer, setOffer] = useState();
+    const [isNotFound, setIsNotFound] = useState(false);
 
     const { isConnected, address } = useAccount()
 
@@ -28,6 +30,11 @@ const Item = () => {
 
     const getData = async () => {
         const result = await sdk.getItem(id);
+
+        if (!result) {
+            setIsNotFound(true);
+            return;
+        }
 
         setData(result)
 
@@ -52,7 +59,7 @@ const Item = () => {
             }
         }
         else {
-            errorMessage('Please connect your wallet');
+            errorMessage('Please connect your wallet!');
         }
 
         setIsInteracting(false);
@@ -73,7 +80,7 @@ const Item = () => {
             }
         }
         else {
-            errorMessage('Please connect your wallet');
+            errorMessage('Please connect your wallet!');
         }
 
         setIsInteracting(false);
@@ -113,6 +120,10 @@ const Item = () => {
     useEffect(() => {
         getData();
     }, [address]);
+
+    if (isNotFound) {
+        return <NotFound message="Item with this ID does not exist!" />
+    }
 
     return (
         <div className="container">
