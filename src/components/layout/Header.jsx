@@ -5,12 +5,12 @@ import { sepolia } from 'wagmi/chains';
 
 import { truncate } from '../../utils';
 
-import Button from '../ui/Button';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
 import { successMessage } from '../../services/alertMessages';
 import { ethers } from 'ethers';
+import { infuraProvider } from '../../services/helpers';
 import { useSDK } from '../../hooks/useSDK';
 
 import md5 from 'md5';
@@ -78,6 +78,9 @@ function Header() {
             const signer = new ethers.providers.Web3Provider(window.ethereum).getSigner();
             sdk.connectSigner(signer);
         }
+        else {
+            sdk.connectSigner(infuraProvider);
+        }
 
         checkOwner();
         getBalance();
@@ -87,19 +90,16 @@ function Header() {
         <div className="header-wrapper">
             <div className="header">
                 <div className="container d-flex justify-content-between align-item-center">
-                    <a href="/">
-                        <img
-                            src="https://limeacademy.tech/wp-content/uploads/2021/08/limeacademy_logo.svg"
-                            alt=""
-                        />
-                    </a>
+                    <img
+                        src="https://limeacademy.tech/wp-content/uploads/2021/08/limeacademy_logo.svg"
+                        alt=""
+                    />
                     <Nav>
                         <NavDropdown
                             title={currentSelection}
                         >
                             <NavDropdown.Item as={Link} to={'/'} onClick={handleSelect}>Home</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/create-collection'} onClick={handleSelect}>Create NFT collection</NavDropdown.Item>
-                            <NavDropdown.Item as={Link} to={'/add-existing-collection'} onClick={handleSelect}>Add existing NFT collection</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/mint-from'} onClick={handleSelect}>Mint</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/collections'} onClick={handleSelect}>View NFT collections</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={'/add-item-from'} onClick={handleSelect}>Add item</ NavDropdown.Item>
@@ -133,7 +133,7 @@ function Header() {
                                 </div>
                             </>
                         ) : (
-                            <Button onClick={handleConnectButtonClick}>Connect Metamask</Button>
+                            <button className="btn btn-primary" onClick={handleConnectButtonClick}>Connect Metamask</button>
                         )}
                     </div>
                 </div>

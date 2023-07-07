@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ItemCards from '../components/ItemCards';
 import { useAccount } from 'wagmi';
 

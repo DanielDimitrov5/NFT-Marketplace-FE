@@ -3,8 +3,7 @@ import { ethers } from "ethers"
 import { Link } from "react-router-dom"
 import { successMessage, errorMessage } from "../services/alertMessages"
 import { useSDK } from "../hooks/useSDK"
-import { useAccount } from "wagmi"
-import { useBalance } from "wagmi"
+import { useAccount, useBalance } from "wagmi"
 
 const MyOffereCard = ({ item, index }) => {
     const sdk = useSDK();

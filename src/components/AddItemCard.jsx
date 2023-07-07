@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { successMessage } from "../services/alertMessages";
-import Button from "../components/ui/Button";
 import { useSDK } from "../hooks/useSDK";
 
 const AddItemCard = ({ item }) => {
@@ -30,7 +29,7 @@ const AddItemCard = ({ item }) => {
                 <h5 className="card-title">{item.name}</h5>
                 <p className="card-text">{item.description}</p>
                 {!isAdding ? (
-                    <Button onClick={add} className="btn btn-primary" disabled={isAdding}>Add</Button>
+                    <button onClick={add} className="btn btn-primary" disabled={isAdding}>Add</button>
                 ) : (
                     <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>

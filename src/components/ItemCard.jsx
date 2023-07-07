@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
+
 import { ethers } from "ethers";
 import { Link } from "react-router-dom";
 import { Popover, InputNumber } from 'antd';
-import { useAccount } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 import { successMessage, errorMessage } from "../services/alertMessages";
 import { useSDK } from "../hooks/useSDK";
-import { useBalance } from "wagmi";
 
 const ItemCard = ({ contractData, item, i }) => {
     const sdk = useSDK();
@@ -41,7 +41,7 @@ const ItemCard = ({ contractData, item, i }) => {
             }
         }
         else {
-            errorMessage('Please connect your wallet');
+            errorMessage('Please connect your wallet!');
         }
 
         setIsLoading(false);
@@ -62,7 +62,7 @@ const ItemCard = ({ contractData, item, i }) => {
             }
         }
         else {
-            errorMessage('Please connect your wallet');
+            errorMessage('Please connect your wallet!');
         }
 
         setIsLoading(false);

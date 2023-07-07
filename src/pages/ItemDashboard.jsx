@@ -6,6 +6,7 @@ import { useAccount } from "wagmi";
 import { Link } from "react-router-dom";
 import { Image } from 'antd';
 import Loading from "../components/Loading";
+import NotFound from "../components/NotFound";
 import { successMessage, errorMessage } from "../services/alertMessages";
 import { useSDK } from "../hooks/useSDK";
 
@@ -21,12 +22,17 @@ const ItemDashboard = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isApproved, setIsApproved] = useState(false);
     const [isApproving, setIsApproving] = useState(false);
+    const [isNotFound, setIsNotFound] = useState(false);
 
 
     const getData = async () => {
         setIsLoading(true);
 
         const result = await sdk.getItem(id);
+
+        if (!result) {
+            setIsNotFound(true);
+        }
 
         const offers = (await sdk.getOffers(id)).filter(offer => offer.seller === address);
 
@@ -92,6 +98,8 @@ const ItemDashboard = () => {
     useEffect(() => {
         getData();
     }, []);
+
+    if (isNotFound) return <NotFound message="Item with this ID does not exist!" />
 
     if (data?.item?.owner !== address && !isLoading) {
         return (
