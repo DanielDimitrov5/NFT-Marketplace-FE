@@ -29,8 +29,6 @@ Before running this application, make sure you have installed `node` and `npm` o
 
 - `/create-collection` - Allows users to create a new NFT collection.
 
-- `/add-existing-collection` - Allows users to add an existing NFT collection to the marketplace.
-
 - `/mint-from` - Displays a list of collections from which a user can mint NFTs.
 
 - `/mint-from/:id` - Allows users to mint new NFTs from a specific collection based on the given ID.
