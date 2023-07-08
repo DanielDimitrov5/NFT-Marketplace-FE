@@ -19,6 +19,8 @@ This repository contains a decentralized application (DApp) built using React.js
 
 ## Getting Started
 
+https://nft-marketplace-lime.web.app/
+
 Before running this application, make sure you have installed `node` and `npm` on your system.
 
 ## Routes Description
