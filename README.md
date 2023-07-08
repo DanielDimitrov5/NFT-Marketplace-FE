@@ -21,7 +21,15 @@ This repository contains a decentralized application (DApp) built using React.js
 
 https://nft-marketplace-lime.web.app/
 
+**Required network** - Sepolia test network
+
 Before running this application, make sure you have installed `node` and `npm` on your system.
+
+1. Clone the repository.
+2. Install the dependencies with `npm install`.
+3. Set up your environment variables.
+4. Start the development server with `npm start`.
+5. Build the application for production with `npm run build`.
 
 ## Routes Description
 
