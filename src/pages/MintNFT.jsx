@@ -31,7 +31,7 @@ const MintFrom = () => {
         if (file && file.type.includes("image")) {
             setImage(file);
         } else {
-            alert("Please select a valid image file.");
+            errorMessage("Please select a valid image file.");
             setImage("");
             document.getElementById('image').value = '';
         }
@@ -41,7 +41,7 @@ const MintFrom = () => {
         e.preventDefault();
 
         if (!name || !description) {
-            alert('Please enter name and description');
+            errorMessage('Please enter name and description!');
             return;
         }
 
