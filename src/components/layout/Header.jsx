@@ -90,10 +90,12 @@ function Header() {
         <div className="header-wrapper">
             <div className="header">
                 <div className="container d-flex justify-content-between align-item-center">
-                    <img
-                        src="https://limeacademy.tech/wp-content/uploads/2021/08/limeacademy_logo.svg"
-                        alt=""
-                    />
+                    <Link to={"/"}>
+                        <img
+                            src="https://limeacademy.tech/wp-content/uploads/2021/08/limeacademy_logo.svg"
+                            alt=""
+                        />
+                    </Link>
                     <Nav>
                         <NavDropdown
                             title={currentSelection}
