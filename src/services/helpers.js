@@ -2,7 +2,7 @@ import marketplaceABI from '../contractData/abi/NFTMarketplace.json';
 import { providers } from 'ethers';
 
 export const marketplaceContract = {
-    address: '0x8C43a9eF5291E8F2184df0A05c0b7d9978e230CA',
+    address: '0xf4351BA9Ca701Cf689442833CDA5F7FF18C2e00C',
     abi: marketplaceABI,
 }
 
