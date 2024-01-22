@@ -13,7 +13,15 @@
   z-index: 1;
   padding: 24px;
   width: 100%;
-  background-color: $light;
+  //background-color: $light;
+}
+
+.dark-background {
+  background-color: $dark;
+}
+
+.dark-background-1 {
+  background-color: $dark-1;
 }
 
 .main {
