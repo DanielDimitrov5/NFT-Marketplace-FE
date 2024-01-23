@@ -1,3 +1,6 @@
+* {
+  color: $light;
+}
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -20,15 +23,20 @@
   background-color: $dark;
 }
 
+.light-background {
+  background-color: $light;
+}
+
 .dark-background-1 {
   background-color: $dark-1;
 }
+
 
 .main {
   flex: 1;
 }
 
 .footer {
-  background-color: $light;
+  //background-color: $light;
   padding: 24px;
 }
