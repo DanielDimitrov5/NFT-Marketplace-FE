@@ -2,7 +2,7 @@ import React from 'react';
 
 function Footer() {
   return (
-    <div className="footer">
+    <div className="footer dark-background-1">
       <p className="text-center">
         <a target="_blank" rel="noreferrer" href="https://limeacademy.tech/">
           <img
