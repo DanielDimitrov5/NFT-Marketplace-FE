@@ -12,6 +12,8 @@ import { successMessage } from '../../services/alertMessages';
 import { ethers } from 'ethers';
 import { infuraProvider } from '../../services/helpers';
 import { useSDK } from '../../hooks/useSDK';
+import { FaCircleHalfStroke } from 'react-icons/fa6';
+import Cookies from 'js-cookie';
 
 import md5 from 'md5';
 
@@ -87,7 +89,12 @@ function Header() {
 
   return (
     <div className="header-wrapper">
-      <div className="header dark-background-1">
+      <div
+        className={
+          'header ' +
+          (Cookies.get('bg-theme') === 'dark' ? 'dark-background-1' : 'light-background')
+        }
+      >
         <div className="container d-flex justify-content-between align-item-center">
           <Link to={'/'}>
             <img
@@ -122,6 +129,20 @@ function Header() {
                 My Offers
               </NavDropdown.Item>
             </NavDropdown>
+            <FaCircleHalfStroke
+              fill={Cookies.get('bg-theme') === 'dark' ? 'white' : 'black'}
+              className="nav-icon"
+              onClick={e => {
+                let theme = Cookies.get('bg-theme');
+                if (theme === 'dark') {
+                  Cookies.set('bg-theme', 'white', { expires: 7 });
+                  window.location.reload(false);
+                } else {
+                  Cookies.set('bg-theme', 'dark', { expires: 7 });
+                  window.location.reload(false);
+                }
+              }}
+            />
           </Nav>
           <div className="d-flex">
             {isLoading ? (
