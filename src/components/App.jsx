@@ -30,6 +30,7 @@ import nftBytecode from '../contractData/NftBytecode.json';
 import ErrorBoundary from './ErrorBoundary';
 import NFTMarketplaceSDK from 'nft-mp-sdk';
 import SDKContext from '../sdkContext';
+import Cookies from 'js-cookie';
 
 function App() {
   const [sdk, setSdk] = useState(null);
@@ -62,7 +63,11 @@ function App() {
           <ErrorBoundary>
             <div className="wrapper">
               <Header />
-              <div className="main dark-background">
+              <div
+                className={
+                  'main ' + (Cookies.get('bg-theme') === 'dark' ? 'dark-background' : null)
+                }
+              >
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/item/:id" element={<Item />} />

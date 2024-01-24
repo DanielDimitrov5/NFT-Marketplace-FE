@@ -1,6 +1,3 @@
-* {
-  color: $light;
-}
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -21,14 +18,23 @@
 
 .dark-background {
   background-color: $dark;
+  * {
+    color: white;
+  }
 }
 
 .light-background {
   background-color: $light;
+  * {
+    color: black;
+  }
 }
 
 .dark-background-1 {
   background-color: $dark-1;
+  * {
+    color: white;
+  }
 }
 
 

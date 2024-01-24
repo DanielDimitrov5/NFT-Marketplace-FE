@@ -6,6 +6,7 @@ import { Popover, InputNumber } from 'antd';
 import { useAccount, useBalance } from 'wagmi';
 import { successMessage, errorMessage } from '../services/alertMessages';
 import { useSDK } from '../hooks/useSDK';
+import Cookies from 'js-cookie';
 
 const ItemCard = ({ contractData, item, i }) => {
   const sdk = useSDK();
@@ -113,7 +114,12 @@ const ItemCard = ({ contractData, item, i }) => {
 
   return (
     <div className="col-md-4" key={i}>
-      <div className="card mb-4 dark-background-1">
+      <div
+        className={
+          'card mb-4 ' +
+          (Cookies.get('bg-theme') === 'dark' ? 'dark-background-1' : 'white-background')
+        }
+      >
         <Link to={`/item/${item.id}`}>
           <img
             src={contractData.image}
