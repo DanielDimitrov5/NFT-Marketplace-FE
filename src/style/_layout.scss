@@ -24,6 +24,12 @@
   input[type='text'] {
     color: black;
   }
+  .card {
+    background-color: $dark-1;
+    .card-title {
+      color: $primary;
+    }
+  }
   .dark-items {
     background-color: $dark-1;
     * {
