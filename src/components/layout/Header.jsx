@@ -103,7 +103,10 @@ function Header() {
             />
           </Link>
           <Nav>
-            <NavDropdown title={currentSelection}>
+            <NavDropdown
+              title={currentSelection}
+              className={Cookies.get('bg-theme') === 'dark' ? 'dark-items' : null}
+            >
               <NavDropdown.Item as={Link} to={'/'} onClick={handleSelect}>
                 Home
               </NavDropdown.Item>
@@ -162,7 +165,11 @@ function Header() {
                     <span>{Number(data && data.formatted).toFixed(3)} ETH</span>
                   </p>
                   <span className="mx-3">|</span>
-                  <NavDropdown title="Account" id="basic-nav-dropdown">
+                  <NavDropdown
+                    title="Account"
+                    id="basic-nav-dropdown"
+                    className={Cookies.get('bg-theme') === 'dark' ? 'dark-items' : null}
+                  >
                     <NavDropdown.Item onClick={handleDisconnectButtonClick}>
                       Disconnect
                     </NavDropdown.Item>

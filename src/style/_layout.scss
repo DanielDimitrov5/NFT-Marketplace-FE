@@ -21,6 +21,18 @@
   * {
     color: white;
   }
+  input[type='text'] {
+    color: black;
+  }
+  .dark-items {
+    background-color: $dark-1;
+    * {
+      background-color: $dark;
+    }
+    *:hover {
+      color: $primary;
+    }
+  }
 }
 
 .light-background {
@@ -35,8 +47,15 @@
   * {
     color: white;
   }
+  .dark-items {
+    * {
+      background-color: $dark-1;
+    }
+    *:hover {
+      color: $primary;
+    }
+  }
 }
-
 
 .main {
   flex: 1;
