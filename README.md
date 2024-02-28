@@ -28,6 +28,11 @@ Before running this application, make sure you have installed `node` and `npm` o
 1. Clone the repository.
 2. Install the dependencies with `npm install`.
 3. Set up your environment variables.
+```
+REACT_APP_IPFS_PROVIDER={Infura IPFS provider}
+REACT_APP_NETWORK={network}
+REACT_APP_API_KEY={Infura API key}
+```
 4. Start the development server with `npm start`.
 5. Build the application for production with `npm run build`.
 
